@@ -30,7 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-
+import com.example.marketbooking.model.BookingCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
 class RegisterActivity : AppCompatActivity() {
@@ -40,9 +40,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var firstName: MutableState<String>
     private lateinit var lastName: MutableState<String>
     private lateinit var passwordVisible: MutableState<Boolean>
-    private val categories = listOf("ประจำ", "ขาจร")
+    private val categories = BookingCategory.values().toList()
     lateinit var expanded: MutableState<Boolean>
-    private lateinit var selectedCategory: MutableState<String>
+    private lateinit var selectedCategory: MutableState<BookingCategory>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +126,7 @@ class RegisterActivity : AppCompatActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             OutlinedTextField(
-                                value = selectedCategory.value,
+                                value = selectedCategory.value.categoryName,
                                 onValueChange = { },
                                 readOnly = true,
                                 label = { Text("ประเภทลูกค้า") },
@@ -145,7 +145,7 @@ class RegisterActivity : AppCompatActivity() {
                             ) {
                                 categories.forEach { category ->
                                     DropdownMenuItem(
-                                        text = { Text(category) },
+                                        text = { Text(category.categoryName) },
                                         onClick = {
                                             selectedCategory.value = category
                                             expanded.value = false
@@ -157,7 +157,14 @@ class RegisterActivity : AppCompatActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Button(
-                                onClick = { /* Handle registration logic */ },
+                                onClick = {
+                                    // Log all the information
+                                    println("Email: ${email.value}")
+                                    println("Password: ${password.value}")
+                                    println("Shop Name: ${shopName.value}")
+                                    println("First Name: ${firstName.value}")
+                                    println("Selected Category Id: ${selectedCategory.value.id}")
+                                },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("ลงทะเบียน")
