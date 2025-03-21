@@ -1,5 +1,6 @@
 package com.example.marketbooking
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,9 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.marketbooking.api.RetrofitClient
+import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -29,8 +32,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -58,6 +62,16 @@ fun MainScreen() {
                 }
             ) {
                 Text("Call API")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Navigation Button
+            Button(
+                onClick = {
+                    context.startActivity(Intent(context, RegularBookingActivity::class.java))
+                }
+            ) {
+                Text("Go to Regular Booking")
             }
         }
     }
