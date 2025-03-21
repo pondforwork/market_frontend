@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import com.example.marketbooking.api.RetrofitClient
@@ -32,17 +34,20 @@ import kotlin.math.log
 class RegularBookingActivity : ComponentActivity() {
     private lateinit var isLoading: MutableState<Boolean>
     private lateinit var availableStalls: MutableState<List<Stall>>
+    private lateinit var showDialog: MutableState<Boolean>
+    private lateinit var selectedStall: MutableState<Stall?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContent {
             isLoading = remember { mutableStateOf(true) }
             availableStalls = remember { mutableStateOf(emptyList()) }
             val scope = rememberCoroutineScope()
+            showDialog = remember { mutableStateOf(false) }
+            selectedStall = remember { mutableStateOf(null) }
 
-            // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine
+            // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
             LaunchedEffect(Unit) {
                 getAvailableStalls()
             }
@@ -73,7 +78,6 @@ class RegularBookingActivity : ComponentActivity() {
                         }
                     )
                 }, content = { paddingValues ->
-                    
                     if (isLoading.value) {
                         Box(
                             modifier = Modifier
@@ -111,6 +115,13 @@ class RegularBookingActivity : ComponentActivity() {
 
     @Composable
     fun MarketGrid() {
+        if (showDialog.value && selectedStall.value != null) {
+            StallDialog(
+                stall = selectedStall.value!!,
+                onDismiss = { showDialog.value = false }
+            )
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -134,7 +145,7 @@ class RegularBookingActivity : ComponentActivity() {
                         stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
                         else -> Color(0xFF006400)
                     }
-                    MarketStall(text = seatLabel, color = color)
+                    MarketStall(text = seatLabel, color = color, stall = stall)
                 }
             }
 
@@ -155,19 +166,24 @@ class RegularBookingActivity : ComponentActivity() {
                         stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
                         else -> Color(0xFF006400)
                     }
-                    MarketStall(text = seatLabel, color = color)
+                    MarketStall(text = seatLabel, color = color, stall = stall)
                 }
             }
         }
     }
 
     @Composable
-    fun MarketStall(text: String, color: Color) {
+    fun MarketStall(text: String, color: Color, stall: Stall?) {
         Box(
             modifier = Modifier
-                .size(50.dp) // ขนาดของที่นั่ง (ปรับได้ตามต้องการ)
+                .size(50.dp)
                 .background(color, shape = RoundedCornerShape(4.dp))
-                .clickable { /* เพิ่ม logic การเลือกที่นั่ง */ },
+                .clickable {
+                    if (stall != null) {
+                        selectedStall.value = stall
+                        showDialog.value = true
+                    }
+                },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -179,5 +195,22 @@ class RegularBookingActivity : ComponentActivity() {
         }
     }
 
-
+    @Composable
+    fun StallDialog(stall: Stall, onDismiss: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("รายละเอียดแผง ${stall.stallName}") },
+            text = {
+                Column {
+                    Text("สถานะ: ${stall.bookingStatus}")
+                    Text("จำนวนวันที่ว่าง: ${stall.availableDays}/${stall.totalDays}")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("ปิด")
+                }
+            }
+        )
+    }
 }

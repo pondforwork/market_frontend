@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -22,8 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.BookingCategory
+import com.example.marketbooking.model.Stall
 import com.example.marketbooking.model.User
 import kotlinx.coroutines.launch
 
@@ -48,6 +52,7 @@ class RegisterActivity : AppCompatActivity() {
     private val categories = BookingCategory.values().toList()
     lateinit var expanded: MutableState<Boolean>
     private lateinit var selectedCategory: MutableState<BookingCategory>
+    private lateinit var showDialog: MutableState<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +67,7 @@ class RegisterActivity : AppCompatActivity() {
             expanded = remember { mutableStateOf(false) }
             selectedCategory = remember { mutableStateOf(categories[0]) }
             val scope = rememberCoroutineScope()
+            showDialog = remember { mutableStateOf(false) }
 
             Scaffold(
                 topBar = {
@@ -81,6 +87,13 @@ class RegisterActivity : AppCompatActivity() {
                             .padding(paddingValues),
 //                        contentAlignment = Alignment.Center
                     ) {
+
+                        if (showDialog.value ) {
+                            SuccessDialog(
+                                onDismiss = { showDialog.value = false }
+                            )
+                        }
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -200,9 +213,28 @@ class RegisterActivity : AppCompatActivity() {
 
         try {
             val response = RetrofitClient.apiService.register(user)
-            Log.e("API_RESPONSE", response.toString())
+            // ถ้าผ่าน ให้แสดง Dialog สำเร็จ
+            showDialog.value = true
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
+    }
+
+    @Composable
+    fun SuccessDialog(onDismiss: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("สมัครสมาชิกสำเร็จ") },
+            text = {
+                Column {
+                    Text("สำเร็จ")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("ตกลง")
+                }
+            }
+        )
     }
 }
