@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.view.RegularBookingActivity
+import com.example.marketbooking.view.register.RegisterActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -45,24 +46,34 @@ fun MainScreen() {
         ) {
             Text(text = "Hello World!")
             Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 onClick = {
-                    scope.launch {
-                        try {
-                            val response = RetrofitClient.apiService.getAvailableStalls()
-                            if (response.isSuccessful) {
-                                Log.d("API_RESPONSE", "Success: ${response.body()}")
-                            } else {
-                                Log.e("API_RESPONSE", "Error: ${response.errorBody()?.string()}")
-                            }
-                        } catch (e: Exception) {
-                            Log.e("API_RESPONSE", "Exception: ${e.message}")
-                        }
-                    }
+                    context.startActivity(Intent(context, RegisterActivity::class.java))
                 }
             ) {
-                Text("Call API")
+                Text("ลงทะเบียนเข้าใช้งาน (ประจำ)")
             }
+
+
+//            Button(
+//                onClick = {
+//                    scope.launch {
+//                        try {
+//                            val response = RetrofitClient.apiService.getAvailableStalls()
+//                            if (response.isSuccessful) {
+//                                Log.d("API_RESPONSE", "Success: ${response.body()}")
+//                            } else {
+//                                Log.e("API_RESPONSE", "Error: ${response.errorBody()?.string()}")
+//                            }
+//                        } catch (e: Exception) {
+//                            Log.e("API_RESPONSE", "Exception: ${e.message}")
+//                        }
+//                    }
+//                }
+//            ) {
+//                Text("Call API")
+//            }
             Spacer(modifier = Modifier.height(16.dp))
 
             // Navigation Button
