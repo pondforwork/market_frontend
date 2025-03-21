@@ -40,6 +40,7 @@ class RegularBookingActivity : ComponentActivity() {
         setContent {
             isLoading = remember { mutableStateOf(true) }
             availableStalls = remember { mutableStateOf(emptyList()) }
+            val scope = rememberCoroutineScope()
 
             // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine
             LaunchedEffect(Unit) {
@@ -55,6 +56,20 @@ class RegularBookingActivity : ComponentActivity() {
                         ),
                         title = {
                             Text("จองพื้นที่ตลาด (รายเดือน)")
+                        },
+                        actions = {
+                            Text(
+                                text = "รีเฟรช",
+                                color = Color.White,
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            getAvailableStalls()
+                                        }
+
+                                    }
+                            )
                         }
                     )
                 }, content = { paddingValues ->
@@ -93,16 +108,16 @@ class RegularBookingActivity : ComponentActivity() {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
-    
+
     @Composable
     fun MarketGrid() {
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            // แถว A (ชิดซ้าย)
+            // แถว A (ซ้าย)
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -117,13 +132,13 @@ class RegularBookingActivity : ComponentActivity() {
                     val color = when {
                         stall == null -> Color.Gray
                         stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                        else -> Color.Green
+                        else -> Color(0xFF006400)
                     }
                     MarketStall(text = seatLabel, color = color)
                 }
             }
 
-            // แถว B (ชิดขวา)
+            // แถว B (ขวา)
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -138,7 +153,7 @@ class RegularBookingActivity : ComponentActivity() {
                     val color = when {
                         stall == null -> Color.Gray
                         stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                        else -> Color.Green
+                        else -> Color(0xFF006400)
                     }
                     MarketStall(text = seatLabel, color = color)
                 }
