@@ -3,7 +3,10 @@ import com.google.gson.annotations.SerializedName
 
 class User(
     @SerializedName("id")
-    val userId: Int,
+    val userId: Int?,
+
+    @SerializedName("email")
+    val email: String,
 
     @SerializedName("name")
     val name: String,
@@ -15,7 +18,7 @@ class User(
     val shopName: String,
 
     @SerializedName("user_booking_category_id")
-    val bookingCategory: BookingCategory,
+    val bookingCategoryId: Int,
 )
 
 

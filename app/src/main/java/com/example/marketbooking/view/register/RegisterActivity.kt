@@ -1,6 +1,7 @@
 package com.example.marketbooking.view.register
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
@@ -26,11 +27,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.BookingCategory
+import com.example.marketbooking.model.User
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 class RegisterActivity : AppCompatActivity() {
@@ -56,6 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             passwordVisible = remember { mutableStateOf(false) }
             expanded = remember { mutableStateOf(false) }
             selectedCategory = remember { mutableStateOf(categories[0]) }
+            val scope = rememberCoroutineScope()
 
             Scaffold(
                 topBar = {
@@ -164,7 +170,10 @@ class RegisterActivity : AppCompatActivity() {
                                     println("Shop Name: ${shopName.value}")
                                     println("First Name: ${firstName.value}")
                                     println("Selected Category Id: ${selectedCategory.value.id}")
-                                },
+
+                                    scope.launch {
+                                        register()
+                                    }                                },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text("ลงทะเบียน")
@@ -177,5 +186,23 @@ class RegisterActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private suspend fun register() {
+        val user = User(
+            userId =  null,
+            email = email.value,
+            password = password.value,
+            shopName = shopName.value,
+            name = firstName.value,
+            bookingCategoryId = selectedCategory.value.id
+        )
+
+        try {
+            val response = RetrofitClient.apiService.register(user)
+            Log.e("API_RESPONSE", response.toString())
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
     }
 }
