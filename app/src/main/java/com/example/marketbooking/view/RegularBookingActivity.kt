@@ -17,14 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import com.example.marketbooking.api.RetrofitClient
+import com.example.marketbooking.model.Stall
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
+@OptIn(ExperimentalMaterial3Api::class)
 class RegularBookingActivity : ComponentActivity() {
     private lateinit var isLoading: MutableState<Boolean>
-    private lateinit var availableStalls: MutableState<List<String>>
+    private lateinit var availableStalls: MutableState<List<Stall>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,78 +40,86 @@ class RegularBookingActivity : ComponentActivity() {
         setContent {
             isLoading = remember { mutableStateOf(true) }
             availableStalls = remember { mutableStateOf(emptyList()) }
-//            var availableStalls by remember { mutableStateOf<List<String>>(emptyList()) }
-
-            // Simulate loading
-//            LaunchedEffect(Unit) {
-//                delay(2000) // Simulate a 2-second loading time
-//                isLoading = false
-//            }
-
-            var availableStalls by remember { mutableStateOf<List<String>>(emptyList()) }
 
             // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine
             LaunchedEffect(Unit) {
                 getAvailableStalls()
             }
 
-
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("จองพื้นที่ตลาด")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Blue,
+                            titleContentColor = Color.White
+                        ),
+                        title = {
+                            Text("จองพื้นที่ตลาด (รายเดือน)")
+                        }
+                    )
+                }, content = { paddingValues ->
+                    
                     if (isLoading.value) {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Loading...")
+                            Text("กำลังดึงข้อมูล โปรดรอ...")
                         }
                     } else {
-                        MarketGrid()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            MarketGrid()
+                        }
                     }
                 }
-            }
-
-
+            )
         }
-
     }
 
     private suspend fun getAvailableStalls() {
         try {
             isLoading.value = true
             val response = RetrofitClient.apiService.getAvailableStalls()
+            availableStalls.value = response.body() ?: emptyList()
             isLoading.value = false
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
-
+    
     @Composable
     fun MarketGrid() {
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween // ให้แถว A ชิดซ้ายและแถว B ชิดขวา
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // แถว A (ชิดซ้าย)
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(100.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp) // Spacing between seats
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 for (row in 0 until 12) {
                     val seatLabel = "A${row + 1}"
-                    MarketStall(text = seatLabel, color = Color.Blue)
+                    val stall = availableStalls.value.find {
+                        it.lineName == "A" && it.lineSequence == row + 1
+                    }
+                    val color = when {
+                        stall == null -> Color.Gray
+                        stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                        else -> Color.Green
+                    }
+                    MarketStall(text = seatLabel, color = color)
                 }
             }
 
@@ -113,11 +128,19 @@ class RegularBookingActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(100.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp) // Spacing between seats
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 for (row in 0 until 12) {
                     val seatLabel = "B${row + 1}"
-                    MarketStall(text = seatLabel, color = Color.Green)
+                    val stall = availableStalls.value.find {
+                        it.lineName == "B" && it.lineSequence == row + 1
+                    }
+                    val color = when {
+                        stall == null -> Color.Gray
+                        stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                        else -> Color.Green
+                    }
+                    MarketStall(text = seatLabel, color = color)
                 }
             }
         }
