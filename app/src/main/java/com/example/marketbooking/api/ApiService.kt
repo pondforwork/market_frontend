@@ -8,4 +8,7 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("available_stalls")
     suspend fun getAvailableStalls(): Response<List<Stall>>
+
+//    @POST("register")
+//    suspend fun register(): Response<User>
 }

@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +40,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var firstName: MutableState<String>
     private lateinit var lastName: MutableState<String>
     private lateinit var passwordVisible: MutableState<Boolean>
+    private val categories = listOf("ประจำ", "ขาจร")
+    lateinit var expanded: MutableState<Boolean>
+    private lateinit var selectedCategory: MutableState<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +54,8 @@ class RegisterActivity : AppCompatActivity() {
             firstName = remember { mutableStateOf("") }
             lastName = remember { mutableStateOf("") }
             passwordVisible = remember { mutableStateOf(false) }
+            expanded = remember { mutableStateOf(false) }
+            selectedCategory = remember { mutableStateOf(categories[0]) }
 
             Scaffold(
                 topBar = {
@@ -65,7 +73,7 @@ class RegisterActivity : AppCompatActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues),
-                        contentAlignment = Alignment.Center
+//                        contentAlignment = Alignment.Center
                     ) {
                         Column(
                             modifier = Modifier
@@ -83,11 +91,11 @@ class RegisterActivity : AppCompatActivity() {
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
-//                            OutlinedTextField(
-//                                value = password.value,
-//                                onValueChange = { password.value = it },
-//                                label = { Text("Password") },
-//                                modifier = Modifier.fillMaxWidth(),
+                            OutlinedTextField(
+                                value = password.value,
+                                onValueChange = { password.value = it },
+                                label = { Text("Password") },
+                                modifier = Modifier.fillMaxWidth(),
 //                                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
 //                                trailingIcon = {
 //                                    val image = if (passwordVisible)
@@ -100,29 +108,54 @@ class RegisterActivity : AppCompatActivity() {
 //                                        Icon(imageVector = image, "")
 //                                    }
 //                                }
-//                            )
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            OutlinedTextField(
-//                                value = shopName,
-//                                onValueChange = { shopName = it },
-//                                label = { Text("ชื่อร้าน") },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            OutlinedTextField(
-//                                value = firstName,
-//                                onValueChange = { firstName = it },
-//                                label = { Text("ชื่อ") },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            OutlinedTextField(
-//                                value = lastName,
-//                                onValueChange = { lastName = it },
-//                                label = { Text("สกุล") },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = shopName.value,
+                                onValueChange = { shopName.value = it },
+                                label = { Text("ชื่อร้าน") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = firstName.value,
+                                onValueChange = { firstName.value = it },
+                                label = { Text("ชื่อ-สกุล") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
                             Spacer(modifier = Modifier.height(16.dp))
+
+                            OutlinedTextField(
+                                value = selectedCategory.value,
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("ประเภทลูกค้า") },
+                                trailingIcon = {
+                                    IconButton(onClick = { expanded.value = true }) {
+                                        Icon(Icons.Default.ArrowDropDown, "dropdown arrow")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            DropdownMenu(
+                                expanded = expanded.value,
+                                onDismissRequest = { expanded.value = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                categories.forEach { category ->
+                                    DropdownMenuItem(
+                                        text = { Text(category) },
+                                        onClick = {
+                                            selectedCategory.value = category
+                                            expanded.value = false
+                                        }
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
                             Button(
                                 onClick = { /* Handle registration logic */ },
                                 modifier = Modifier.fillMaxWidth()

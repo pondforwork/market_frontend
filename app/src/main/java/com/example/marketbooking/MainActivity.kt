@@ -52,7 +52,7 @@ fun MainScreen() {
                     context.startActivity(Intent(context, RegisterActivity::class.java))
                 }
             ) {
-                Text("ลงทะเบียนเข้าใช้งาน (ประจำ)")
+                Text("ลงทะเบียนเข้าใช้งาน")
             }
 
 
