@@ -17,6 +17,9 @@ class User(
     @SerializedName("shop_name")
     val shopName: String,
 
+    @SerializedName("tel")
+    val tel: String,
+
     @SerializedName("user_booking_category_id")
     val bookingCategoryId: Int,
 )

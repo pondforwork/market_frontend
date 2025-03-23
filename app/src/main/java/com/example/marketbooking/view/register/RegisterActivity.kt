@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +49,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var shopName: MutableState<String>
     private lateinit var firstName: MutableState<String>
     private lateinit var lastName: MutableState<String>
+    private lateinit var tel: MutableState<String>
     private lateinit var passwordVisible: MutableState<Boolean>
     private val categories = BookingCategory.values().toList()
     lateinit var expanded: MutableState<Boolean>
@@ -63,6 +65,7 @@ class RegisterActivity : AppCompatActivity() {
             shopName = remember { mutableStateOf("") }
             firstName = remember { mutableStateOf("") }
             lastName = remember { mutableStateOf("") }
+            tel = remember { mutableStateOf("") }
             passwordVisible = remember { mutableStateOf(false) }
             expanded = remember { mutableStateOf(false) }
             selectedCategory = remember { mutableStateOf(categories[0]) }
@@ -73,7 +76,7 @@ class RegisterActivity : AppCompatActivity() {
                 topBar = {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Blue,
+                            containerColor = Color.Green,
                             titleContentColor = Color.White
                         ),
                         title = {
@@ -142,8 +145,14 @@ class RegisterActivity : AppCompatActivity() {
                                 label = { Text("ชื่อ-สกุล") },
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
-
+                            Spacer(modifier = Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = tel.value,
+                                onValueChange = { tel.value = it },
+                                label = { Text("หมายเลขโทรศัพท์") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = selectedCategory.value.categoryName,
                                 onValueChange = { },
@@ -187,7 +196,8 @@ class RegisterActivity : AppCompatActivity() {
                                     scope.launch {
                                         register()
                                     }                                },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonColors(containerColor = Color.Green, contentColor = Color.White , disabledContentColor = Color.Gray, disabledContainerColor = Color.Gray) // เปลี่ยนเป็นสีเขียว
                             ) {
                                 Text("ลงทะเบียน")
                             }
@@ -208,7 +218,8 @@ class RegisterActivity : AppCompatActivity() {
             password = password.value,
             shopName = shopName.value,
             name = firstName.value,
-            bookingCategoryId = selectedCategory.value.id
+            bookingCategoryId = selectedCategory.value.id,
+            tel = tel.value
         )
 
         try {

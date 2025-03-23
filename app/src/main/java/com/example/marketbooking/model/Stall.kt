@@ -22,5 +22,8 @@ data class Stall(
     val totalDays: Int,
 
     @SerializedName("available_days")
-    val availableDays: String
+    val availableDays: String,
+
+    @SerializedName("price")
+    val price: String
 )
