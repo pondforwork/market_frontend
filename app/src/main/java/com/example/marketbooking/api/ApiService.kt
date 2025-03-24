@@ -1,5 +1,6 @@
 package com.example.marketbooking.api
 
+import com.example.marketbooking.model.RequestBooking
 import com.example.marketbooking.model.Stall
 import com.example.marketbooking.model.User
 import retrofit2.Call
@@ -20,4 +21,7 @@ interface ApiService {
     data class LoginRequest(val email: String, val password: String)
     @POST("login")
     suspend fun login(@Body request: LoginRequest): Response<User>
+
+    @POST("request_booking")
+    suspend fun booking(@Body requestObject: RequestBooking): Response<Unit>
 }

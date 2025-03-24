@@ -51,6 +51,9 @@ import com.example.marketbooking.utils.UserPreferences
 import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
 import androidx.compose.ui.draw.clip
+import com.example.marketbooking.api.ApiService
+import com.example.marketbooking.model.RequestBooking
+import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -68,10 +71,12 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            scope = rememberCoroutineScope()
             val context = LocalContext.current // Add context
             isLoading = remember { mutableStateOf(true) }
             availableStalls = remember { mutableStateOf(emptyList()) }
@@ -315,9 +320,18 @@ class RegularBookingActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun bookingStall() {
+    private suspend fun bookingStall(requestBooking: RequestBooking) {
         try {
-
+            val response = RetrofitClient.apiService.booking(requestBooking)
+            // ถ้าจองสำเร็จ
+            if (response.isSuccessful) {
+                println("BookingSuccess")
+                // แสดง Dialog Success
+                showSuccessDialog.value = true
+            }else{
+                println("เกิดข้อผิดพลาดในการจอง")
+            }
+            // ถ้าไม่สำเร็จ
 //            isLoading.value = true
 //            val response = RetrofitClient.apiService.getAvailableStalls()
 //            availableStalls.value = response.body() ?: emptyList()
@@ -462,14 +476,20 @@ class RegularBookingActivity : ComponentActivity() {
             confirmButton = {
                 Button(
                     onClick = {
-//                        println(stall.stallName)
-//                        println(stall.stallId)
-//                        println(userId)
+                        // สร้าง Request Object ของการจอง
+                        var requestObject = RequestBooking(
+                            stallId = stall.stallId,
+                            bookingUserId = userId.toIntOrNull() ?: 0, // แปลง userId เป็น Int, ถ้าไม่ได้ให้เป็น 0
+                            bookingCategoryId = 1,
+                            price = stall.price.toIntOrNull() ?: 0 // แปลง price เป็น Int, ถ้าไม่ได้ให้เป็น 0
+                        )
                         // ซ่อน Dialog จอง
                         showDialog.value = false
+                        scope.launch {
+                            bookingStall(requestObject)
+                        }
 
-                        // แสดง Dialog Success
-                        showSuccessDialog.value = true
+
 
                     },
                     modifier = Modifier
