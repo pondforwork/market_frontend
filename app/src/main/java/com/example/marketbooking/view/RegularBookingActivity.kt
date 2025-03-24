@@ -32,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.marketbooking.MainActivity
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.Stall
+import com.example.marketbooking.utils.UserPreferences
+import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
 
 import kotlinx.coroutines.delay
@@ -44,10 +46,11 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var availableStalls: MutableState<List<Stall>>
     private lateinit var showDialog: MutableState<Boolean>
     private lateinit var selectedStall: MutableState<Stall?>
+    private lateinit var showLogoutDialog: MutableState<Boolean>
+    private lateinit var userPreferences: UserPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             val context = LocalContext.current // Add context
             isLoading = remember { mutableStateOf(true) }
@@ -56,6 +59,21 @@ class RegularBookingActivity : ComponentActivity() {
             showDialog = remember { mutableStateOf(false) }
             selectedStall = remember { mutableStateOf(null) }
             val drawerState = rememberDrawerState(DrawerValue.Closed)
+            showLogoutDialog = remember { mutableStateOf(false) }
+            userPreferences = UserPreferences(this)
+
+
+            if (showLogoutDialog.value) {
+                LogoutConfirmationDialog(
+                    onConfirm = {
+                        userPreferences.clearUser()
+                        startActivity(Intent(this, LoginActivity::class.java))
+                    },
+                    onDismiss = {
+                        showLogoutDialog.value = false
+                    }
+                )
+            }
 
             // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
             LaunchedEffect(Unit) {
@@ -72,18 +90,12 @@ class RegularBookingActivity : ComponentActivity() {
                             .background(Color.Blue)
                             .padding(16.dp)
                     ) {
-                        Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp))
-                        Spacer(modifier = Modifier.height(8.dp))
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
-                                .clickable {
-                                    context.startActivity(Intent(context, MainActivity::class.java)) // Use context to start activity
-                                }
-                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text("หน้าหลัก", color = Color.White, fontSize = 25.sp)
+                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
@@ -111,7 +123,9 @@ class RegularBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
-                                .clickable { /* ออกจากระบบ */ }
+                                .clickable { 
+                                    showLogoutDialog.value = true 
+                                 }
                                 .padding(16.dp)
                         ) {
                             Text("ออกจากระบบ", color = Color.White, fontSize = 25.sp)
@@ -280,6 +294,32 @@ class RegularBookingActivity : ComponentActivity() {
             confirmButton = {
                 TextButton(onClick = onDismiss) {
                     Text("ปิด")
+                }
+            }
+        )
+    }
+
+    @Composable
+    fun LogoutConfirmationDialog(
+        onConfirm: () -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("ยืนยันการออกจากระบบ") },
+            text = { Text("คุณต้องการออกจากระบบใช่หรือไม่?") },
+            confirmButton = {
+                TextButton(
+                    onClick = onConfirm
+                ) {
+                    Text("ตกลง")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismiss
+                ) {
+                    Text("ยกเลิก")
                 }
             }
         )
