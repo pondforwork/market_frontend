@@ -87,7 +87,7 @@ class RegularBookingActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxHeight() // ให้เต็มความสูง
                             .width(300.dp) // ปรับขนาดความกว้างของ Drawer
-                            .background(Color.Blue)
+                            .background(Color(0xFFFFF5E4)) // เปลี่ยนเป็นโค้ดสีที่คุณต้องการ
                             .padding(16.dp)
                     ) {
                         Box(
@@ -95,13 +95,13 @@ class RegularBookingActivity : ComponentActivity() {
                                 .fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp))
+                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFF693382), fontSize = 25.sp))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                                .background(Color(0xFFFFA725), shape = RoundedCornerShape(8.dp))
                                 .clickable { /* ไปหน้าแรก */ }
                                 .padding(16.dp)
                         ) {
@@ -111,7 +111,7 @@ class RegularBookingActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                                .background(Color(0xFFFFA725), shape = RoundedCornerShape(8.dp))
                                 .clickable {
                                 }
                                 .padding(16.dp)
@@ -122,7 +122,7 @@ class RegularBookingActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                                .background(Color.Red, shape = RoundedCornerShape(8.dp))
                                 .clickable { 
                                     showLogoutDialog.value = true 
                                  }
@@ -137,7 +137,7 @@ class RegularBookingActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color.Blue,
+                                containerColor = Color(0xFFFFA725),
                                 titleContentColor = Color.White
                             ),
                             title = {
