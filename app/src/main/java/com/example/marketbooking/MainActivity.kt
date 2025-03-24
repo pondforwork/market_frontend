@@ -31,13 +31,22 @@ class MainActivity : ComponentActivity() {
         if(userFromStorage != null){
             // ถ้ามี User อยู่และเป็นเข้าประจำ
             if(userFromStorage.bookingCategoryId == 1){
-                startActivity(Intent(this, RegularBookingActivity::class.java))
+
+                val intent = Intent(this, RegularBookingActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+
+//                startActivity(Intent(this, RegularBookingActivity::class.java))
             }else{
+                val intent = Intent(this, RegularBookingActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 // ถ้าเป็นขาจร
                 startActivity(Intent(this, RegularBookingActivity::class.java))
             }
         }else{
-            startActivity(Intent(this, LoginActivity::class.java))
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
 //        setContent {
 //            MaterialTheme {

@@ -48,14 +48,22 @@ class LoginActivity : AppCompatActivity() {
                 response.body()?.let { user ->
                     userPreferences.saveUser(user)
                     val userResponse = userPreferences.getUser()
+                    val toast =  Toast.makeText(
+                        this@LoginActivity,
+                        "เข้าสู่ระบบสำเร็จ",
+                        Toast.LENGTH_LONG
+                    )
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 150)
 
+                    toast.show()
                     if(userResponse != null) {
                         if (userResponse.bookingCategoryId == 1) {
+                            finish()
                             startActivity(Intent(this, RegularBookingActivity::class.java))
                         } else {
+                            finish()
                             startActivity(Intent(this, RegularBookingActivity::class.java))
                         }
-                        finish()
                     }
                 }
             } else {
