@@ -3,6 +3,8 @@ package com.example.marketbooking.view.register
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -57,6 +59,14 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                   val toast =  Toast.makeText(
+                        this@LoginActivity,
+                        "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+                        Toast.LENGTH_LONG
+                    )
+                    toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 150)
+
+                toast.show()
                 Log.e("API_RESPONSE", "Error: ${response.errorBody()?.string()}")
             }
         } catch (e: Exception) {

@@ -95,7 +95,7 @@ class RegularBookingActivity : ComponentActivity() {
                                 .fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFF693382), fontSize = 25.sp))
+                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.Black, fontSize = 25.sp))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
