@@ -69,7 +69,7 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var showSuccessDialog: MutableState<Boolean>
-
+    private lateinit var showFailDialog: MutableState<Boolean>
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
@@ -87,10 +87,10 @@ class RegularBookingActivity : ComponentActivity() {
             selectedStall = remember { mutableStateOf(null) }
             val drawerState = rememberDrawerState(DrawerValue.Closed)
             showLogoutDialog = remember { mutableStateOf(false) }
+            showFailDialog = remember { mutableStateOf(false) }
             userPreferences = UserPreferences(this)
             val user  = userPreferences.getUser()
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
-
             if(user!=null){
                 userName = user.name
                 userId = user.userId.toString()
@@ -111,6 +111,10 @@ class RegularBookingActivity : ComponentActivity() {
 
             if (showSuccessDialog.value) {
                 BookingSuccessDialog(onDismiss = { showSuccessDialog.value = false })
+            }
+
+            if (showFailDialog.value) {
+                BookingFailDialog(onDismiss = { showFailDialog.value = false })
             }
 
             // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
@@ -365,7 +369,8 @@ class RegularBookingActivity : ComponentActivity() {
                 // แสดง Dialog Success
                 showSuccessDialog.value = true
             }else{
-                println("เกิดข้อผิดพลาดในการจอง")
+//                responseMessage = response.message()
+                showFailDialog.value = true
             }
             // ถ้าไม่สำเร็จ
 //            isLoading.value = true
@@ -574,6 +579,41 @@ class RegularBookingActivity : ComponentActivity() {
             }
         )
     }
+
+    @Composable
+    fun BookingFailDialog(onDismiss: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = { /* ปิด dialog เมื่อคลิกด้านนอก */ },
+            title = {
+                Text(
+                    text = "เกิดข้อผิดพลาด !!!",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red // สีแดง
+                )
+            },
+            text = {
+                Column {
+                    Text("คุณเคยจองแล้วในเดือนนี้", fontSize = 16.sp)
+                }
+            },
+            confirmButton = {
+                Button(
+                    // กดเพื่อปิด dialog
+                    onClick = {
+                        onDismiss()  // ปิด dialog
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(Color.Red) // สีแดง
+                ) {
+                    Text("ตกลง", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
+        )
+    }
+
 
 
 
