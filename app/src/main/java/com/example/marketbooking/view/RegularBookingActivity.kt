@@ -507,7 +507,7 @@ class RegularBookingActivity : ComponentActivity() {
     @Composable
     fun BookingSuccessDialog(onDismiss: () -> Unit) {
         AlertDialog(
-            onDismissRequest = onDismiss,
+            onDismissRequest = {  },
             title = {
                 Text(
                     text = "จองสำเร็จ!",
