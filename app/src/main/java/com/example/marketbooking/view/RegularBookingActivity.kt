@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.model.RequestBooking
 import com.example.marketbooking.view.history.HistoryActivity
+import com.example.marketbooking.view.holiday.HolidayActivity
 import com.example.marketbooking.view.home.HomeActivity
 import kotlinx.coroutines.CoroutineScope
 
@@ -238,6 +239,7 @@ class RegularBookingActivity : ComponentActivity() {
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
                                 .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable {
+                                    startActivity(Intent(context, HolidayActivity::class.java))
                                 }
                                 .padding(16.dp)
                         ) {

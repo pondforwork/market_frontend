@@ -1,6 +1,7 @@
 package com.example.marketbooking.api
 
 import com.example.marketbooking.model.BookingHistory
+import com.example.marketbooking.model.CanHoliday
 import com.example.marketbooking.model.RequestBooking
 import com.example.marketbooking.model.Stall
 import com.example.marketbooking.model.User
@@ -29,4 +30,8 @@ interface ApiService {
     data class HistoryRequest(val booking_user_id: String)
     @POST("history")
     suspend fun getHistory(@Body request: HistoryRequest): Response<List<BookingHistory>>
+
+    @GET("canholiday")
+    suspend fun canHoliday(): Response<CanHoliday>
+
 }

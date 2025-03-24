@@ -203,7 +203,7 @@ fun getThaiStatus(status: String): String {
     return when (status.lowercase()) {
         "pending" -> "รอการชำระเงิน"
         "purchased" -> "รอการอนุมัติ"
-        "approved" -> "อนุมัติแล้ว"
+        "accepted" -> "อนุมัติแล้ว"
         "rejected" -> "ปฏิเสธ"
         else -> status
     }
