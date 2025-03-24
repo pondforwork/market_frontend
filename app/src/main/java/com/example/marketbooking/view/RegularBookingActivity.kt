@@ -50,6 +50,7 @@ import com.example.marketbooking.model.Stall
 import com.example.marketbooking.utils.UserPreferences
 import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
+import androidx.compose.ui.draw.clip
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,8 +63,12 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var showDialog: MutableState<Boolean>
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
+    private lateinit var showSuccessDialog: MutableState<Boolean>
+
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
+    private lateinit var userId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -77,8 +82,11 @@ class RegularBookingActivity : ComponentActivity() {
             showLogoutDialog = remember { mutableStateOf(false) }
             userPreferences = UserPreferences(this)
             val user  = userPreferences.getUser()
+            showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
+
             if(user!=null){
                 userName = user.name
+                userId = user.userId.toString()
             }
 
 
@@ -92,6 +100,10 @@ class RegularBookingActivity : ComponentActivity() {
                         showLogoutDialog.value = false
                     }
                 )
+            }
+
+            if (showSuccessDialog.value) {
+                BookingSuccessDialog(onDismiss = { showSuccessDialog.value = false })
             }
 
             // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
@@ -210,9 +222,9 @@ class RegularBookingActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
                                 .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
-                                .clickable { 
-                                    showLogoutDialog.value = true 
-                                 }
+                                .clickable {
+                                    showLogoutDialog.value = true
+                                }
                                 .padding(16.dp)
                         ) {
                             Row(
@@ -303,6 +315,18 @@ class RegularBookingActivity : ComponentActivity() {
         }
     }
 
+    private suspend fun bookingStall() {
+        try {
+
+//            isLoading.value = true
+//            val response = RetrofitClient.apiService.getAvailableStalls()
+//            availableStalls.value = response.body() ?: emptyList()
+//            isLoading.value = false
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
+    }
+
     @Composable
     fun MarketGrid() {
         if (showDialog.value && selectedStall.value != null) {
@@ -312,55 +336,72 @@ class RegularBookingActivity : ComponentActivity() {
             )
         }
 
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(16.dp)
+                .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp)) // ตัดพื้นหลังให้ตรงกับ Shape
+                .background(Color(0xFFFFC57F)),
+            contentAlignment = Alignment.Center // จัดให้ Row อยู่ตรงกลาง
         ) {
-            // แถว A (ซ้าย)
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .fillMaxWidth(0.7f) // ควบคุมความกว้างของ Row ให้อยู่ตรงกลาง
+                    .align(Alignment.Center)
+                    .padding(vertical = 10.dp), // จัดให้ Row อยู่ตรงกลาง
+                horizontalArrangement = Arrangement.Center // จัดให้อยู่กึ่งกลางแทน SpaceEvenly
             ) {
-                for (row in 0 until 12) {
-                    val seatLabel = "A${row + 1}"
-                    val stall = availableStalls.value.find {
-                        it.lineName == "A" && it.lineSequence == row + 1
+                // แถว A (ซ้าย)
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(100.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
+                ) {
+                    for (row in 0 until 12) {
+                        val seatLabel = "A${row + 1}"
+                        val stall = availableStalls.value.find {
+                            it.lineName == "A" && it.lineSequence == row + 1
+                        }
+                        val color = when {
+                            stall == null -> Color.Gray
+                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                            else -> Color(0xFF006400)
+                        }
+                        MarketStall(text = seatLabel, color = color, stall = stall)
                     }
-                    val color = when {
-                        stall == null -> Color.Gray
-                        stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                        else -> Color(0xFF006400)
-                    }
-                    MarketStall(text = seatLabel, color = color, stall = stall)
                 }
-            }
 
-            // แถว B (ขวา)
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                for (row in 0 until 12) {
-                    val seatLabel = "B${row + 1}"
-                    val stall = availableStalls.value.find {
-                        it.lineName == "B" && it.lineSequence == row + 1
+                // ทางเดินตรงกลาง
+                Spacer(modifier = Modifier.width(32.dp)) // ขยายทางเดินให้สมดุล
+
+                // แถว B (ขวา)
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(100.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
+                ) {
+                    for (row in 0 until 12) {
+                        val seatLabel = "B${row + 1}"
+                        val stall = availableStalls.value.find {
+                            it.lineName == "B" && it.lineSequence == row + 1
+                        }
+                        val color = when {
+                            stall == null -> Color.Gray
+                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                            else -> Color(0xFF006400)
+                        }
+                        MarketStall(text = seatLabel, color = color, stall = stall)
                     }
-                    val color = when {
-                        stall == null -> Color.Gray
-                        stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                        else -> Color(0xFF006400)
-                    }
-                    MarketStall(text = seatLabel, color = color, stall = stall)
                 }
             }
         }
     }
+
 
     @Composable
     fun MarketStall(text: String, color: Color, stall: Stall?) {
@@ -389,6 +430,7 @@ class RegularBookingActivity : ComponentActivity() {
     fun StallDialog(stall: Stall, onDismiss: () -> Unit) {
         AlertDialog(
             onDismissRequest = onDismiss,
+
             title = {
                 Text(
                     text = "รายละเอียดแผง ${stall.stallName}",
@@ -419,7 +461,17 @@ class RegularBookingActivity : ComponentActivity() {
             },
             confirmButton = {
                 Button(
-                    onClick = onDismiss,
+                    onClick = {
+//                        println(stall.stallName)
+//                        println(stall.stallId)
+//                        println(userId)
+                        // ซ่อน Dialog จอง
+                        showDialog.value = false
+
+                        // แสดง Dialog Success
+                        showSuccessDialog.value = true
+
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.4f)
                         .height(45.dp),
@@ -431,6 +483,42 @@ class RegularBookingActivity : ComponentActivity() {
             }
         )
     }
+
+    @Composable
+    fun BookingSuccessDialog(onDismiss: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    text = "จองสำเร็จ!",
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2E7D32) // สีเขียวเข้ม
+                )
+            },
+            text = {
+                Column {
+                    Text("คุณได้ทำการจองแผงเรียบร้อยแล้ว", fontSize = 16.sp)
+                    Text("ระบบจะพาท่านเข้าสู่หน้าชำระเงิน", fontSize = 16.sp)
+                }
+            },
+            confirmButton = {
+                Button(
+                    // กดเพื่อเข้าสู่หน้าขำระเงิน
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF2E7D32)) // สีเขียว
+                ) {
+                    Text("ตกลง", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
+        )
+    }
+
 
 
     @Composable
