@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +42,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import com.example.marketbooking.MainActivity
 import com.example.marketbooking.api.RetrofitClient
@@ -55,7 +63,7 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var userPreferences: UserPreferences
-
+    private lateinit var userName: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -68,6 +76,10 @@ class RegularBookingActivity : ComponentActivity() {
             val drawerState = rememberDrawerState(DrawerValue.Closed)
             showLogoutDialog = remember { mutableStateOf(false) }
             userPreferences = UserPreferences(this)
+            val user  = userPreferences.getUser()
+            if(user!=null){
+                userName = user.name
+            }
 
 
             if (showLogoutDialog.value) {
@@ -94,60 +106,134 @@ class RegularBookingActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxHeight() // ให้เต็มความสูง
                             .width(300.dp) // ปรับขนาดความกว้างของ Drawer
-                            .background(Color(0xFFFFF5E4)) // เปลี่ยนเป็นโค้ดสีที่คุณต้องการ
+                            .background(Color(0xFFFFA725))
+//                            .background(Color(0xFFFFF5E4)) // เปลี่ยนเป็นโค้ดสีที่คุณต้องการ
                             .padding(16.dp)
                     ) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
+                                    contentAlignment = Alignment.TopStart
                         ) {
-                            Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.Black, fontSize = 25.sp))
+                            Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFFFA725), shape = RoundedCornerShape(8.dp))
-                                .clickable { /* ไปหน้าแรก */ }
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
                                 .padding(16.dp)
                         ) {
-                            Text("ขอจองพื้นที่", color = Color.White, fontSize = 25.sp)
-                        }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart, // ใช้ไอคอนตะกร้า
+                                    contentDescription = "จองพื้นที่",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เว้นระยะระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "ขอจองพื้นที่",
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }                        }
                         Spacer(modifier = Modifier.height(8.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFFFA725), shape = RoundedCornerShape(8.dp))
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable {
                                 }
                                 .padding(16.dp)
                         ) {
-                            Text("ประวัติการจองพื้นที่", color = Color.White, fontSize = 25.sp)
-                        }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
+                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.History, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "ประวัติการจอง",
+                                    tint = Color.White, // ไอคอนเป็นสีขาว
+                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "ประวัติการจอง",
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }                        }
                         Spacer(modifier = Modifier.height(8.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFFFA725), shape = RoundedCornerShape(8.dp))
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable {
                                 }
                                 .padding(16.dp)
                         ) {
-                            Text("แจ้งวันหยุด", color = Color.White, fontSize = 25.sp)
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
+                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.CalendarMonth, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "แจ้งวันหยุด",
+                                    tint = Color.White, // ไอคอนเป็นสีขาว
+                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "แจ้งวันหยุด",
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.Red, shape = RoundedCornerShape(8.dp))
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable { 
                                     showLogoutDialog.value = true 
                                  }
                                 .padding(16.dp)
                         ) {
-                            Text("ออกจากระบบ", color = Color.White, fontSize = 25.sp)
-                        }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
+                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Logout, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "ออกจากระบบ",
+                                    tint = Color.Red, // ไอคอนเป็นสีขาว
+                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    "ออกจากระบบ",
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }                        }
                     }
                 }
             ) {
@@ -159,7 +245,7 @@ class RegularBookingActivity : ComponentActivity() {
                                 titleContentColor = Color.White
                             ),
                             title = {
-                                Text("จองพื้นที่ตลาด (รายเดือน)")
+                                Text("จองพื้นที่ตลาด (รายเดือน)" , style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
                             },
                             actions = {
                                 IconButton(
