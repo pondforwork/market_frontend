@@ -69,7 +69,6 @@ class HomeActivity : ComponentActivity() {
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var showSuccessDialog: MutableState<Boolean>
-
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
@@ -95,10 +94,6 @@ class HomeActivity : ComponentActivity() {
                 userName = user.name
                 userId = user.userId.toString()
             }
-
-
-
-
 
             ModalNavigationDrawer(
                 drawerState = drawerState,
