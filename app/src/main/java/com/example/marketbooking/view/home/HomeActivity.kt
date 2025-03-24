@@ -1,4 +1,4 @@
-package com.example.marketbooking.view
+package com.example.marketbooking.view.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
@@ -53,6 +54,7 @@ import com.example.marketbooking.view.register.RegisterActivity
 import androidx.compose.ui.draw.clip
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.model.RequestBooking
+import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.delay
@@ -95,26 +97,8 @@ class HomeActivity : ComponentActivity() {
             }
 
 
-            if (showLogoutDialog.value) {
-                LogoutConfirmationDialog(
-                    onConfirm = {
-                        userPreferences.clearUser()
-                        startActivity(Intent(this, LoginActivity::class.java))
-                    },
-                    onDismiss = {
-                        showLogoutDialog.value = false
-                    }
-                )
-            }
 
-            if (showSuccessDialog.value) {
-                BookingSuccessDialog(onDismiss = { showSuccessDialog.value = false })
-            }
 
-            // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
-            LaunchedEffect(Unit) {
-                getAvailableStalls()
-            }
 
             ModalNavigationDrawer(
                 drawerState = drawerState,
@@ -135,12 +119,48 @@ class HomeActivity : ComponentActivity() {
                             Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
                         }
                         Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
+                                .clickable {
+                                    // เปิดหน้า Home
+//                                    startActivity(Intent(context, HomeActivity::class.java))
+
+                                }
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
+                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Home, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "ประวัติการจอง",
+                                    tint = Color.White, // ไอคอนเป็นสีขาว
+                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "หน้าหลัก",
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }                        }
+                        Spacer(modifier = Modifier.height(8.dp))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
                                 .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
-                                .padding(16.dp)
+                                .padding(16.dp).clickable {
+                                    // เปิดหน้า Home
+                                    startActivity(Intent(context, RegularBookingActivity::class.java))
+                                }
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -264,306 +284,34 @@ class HomeActivity : ComponentActivity() {
                             title = {
                                 Text("จองพื้นที่ตลาด (รายเดือน)" , style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
                             },
-                            actions = {
-                                IconButton(
-                                    onClick = {
-                                        scope.launch {
-                                            getAvailableStalls()
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = "Refresh",
-                                        tint = Color.White
-                                    )
-                                }
-                            }
+
                         )
-                    }, content = { paddingValues ->
-                        if (isLoading.value) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("กำลังดึงข้อมูล โปรดรอ...")
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                MarketGrid()
-                            }
-                        }
-                    }
-                )
-
-            }
-
-
-        }
-    }
-
-    private suspend fun getAvailableStalls() {
-        try {
-            isLoading.value = true
-            val response = RetrofitClient.apiService.getAvailableStalls()
-            availableStalls.value = response.body() ?: emptyList()
-            isLoading.value = false
-        } catch (e: Exception) {
-            Log.e("API_RESPONSE", "Exception: ${e.message}")
-        }
-    }
-
-    private suspend fun bookingStall(requestBooking: RequestBooking) {
-        try {
-            val response = RetrofitClient.apiService.booking(requestBooking)
-            // ถ้าจองสำเร็จ
-            if (response.isSuccessful) {
-                println("BookingSuccess")
-                // แสดง Dialog Success
-                showSuccessDialog.value = true
-            }else{
-                println("เกิดข้อผิดพลาดในการจอง")
-            }
-            // ถ้าไม่สำเร็จ
-//            isLoading.value = true
-//            val response = RetrofitClient.apiService.getAvailableStalls()
-//            availableStalls.value = response.body() ?: emptyList()
-//            isLoading.value = false
-        } catch (e: Exception) {
-            Log.e("API_RESPONSE", "Exception: ${e.message}")
-        }
-    }
-
-    @Composable
-    fun MarketGrid() {
-        if (showDialog.value && selectedStall.value != null) {
-            StallDialog(
-                stall = selectedStall.value!!,
-                onDismiss = { showDialog.value = false }
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                .clip(RoundedCornerShape(16.dp)) // ตัดพื้นหลังให้ตรงกับ Shape
-                .background(Color(0xFFFFC57F)),
-            contentAlignment = Alignment.Center // จัดให้ Row อยู่ตรงกลาง
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f) // ควบคุมความกว้างของ Row ให้อยู่ตรงกลาง
-                    .align(Alignment.Center)
-                    .padding(vertical = 10.dp), // จัดให้ Row อยู่ตรงกลาง
-                horizontalArrangement = Arrangement.Center // จัดให้อยู่กึ่งกลางแทน SpaceEvenly
-            ) {
-                // แถว A (ซ้าย)
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(100.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
-                ) {
-                    for (row in 0 until 12) {
-                        val seatLabel = "A${row + 1}"
-                        val stall = availableStalls.value.find {
-                            it.lineName == "A" && it.lineSequence == row + 1
-                        }
-                        val color = when {
-                            stall == null -> Color.Gray
-                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                            else -> Color(0xFF006400)
-                        }
-                        MarketStall(text = seatLabel, color = color, stall = stall)
-                    }
-                }
-
-                // ทางเดินตรงกลาง
-                Spacer(modifier = Modifier.width(32.dp)) // ขยายทางเดินให้สมดุล
-
-                // แถว B (ขวา)
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(100.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
-                ) {
-                    for (row in 0 until 12) {
-                        val seatLabel = "B${row + 1}"
-                        val stall = availableStalls.value.find {
-                            it.lineName == "B" && it.lineSequence == row + 1
-                        }
-                        val color = when {
-                            stall == null -> Color.Gray
-                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                            else -> Color(0xFF006400)
-                        }
-                        MarketStall(text = seatLabel, color = color, stall = stall)
-                    }
-                }
-            }
-        }
-    }
-
-
-    @Composable
-    fun MarketStall(text: String, color: Color, stall: Stall?) {
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .background(color, shape = RoundedCornerShape(4.dp))
-                .clickable {
-                    if (stall != null) {
-                        selectedStall.value = stall
-                        showDialog.value = true
-                    }
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-    }
-
-    @Composable
-    fun StallDialog(stall: Stall, onDismiss: () -> Unit) {
-        AlertDialog(
-            onDismissRequest = onDismiss,
-
-            title = {
-                Text(
-                    text = "รายละเอียดแผง ${stall.stallName}",
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Column {
-                    Text("สถานะ: ${stall.bookingStatus}")
-                    Text("จำนวนวันที่ว่าง: ${stall.availableDays}")
-                    Text("ราคาที่ต้องชำระ: ${stall.price}")
-
-//              Text("จำนวนวันที่ว่าง: ${stall.availableDays}/${stall.totalDays}")
-
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f)
-                        .height(45.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Gray)
-                ) {
-                    Text("ยกเลิก", color = Color.White, fontWeight = FontWeight.Bold)
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        // สร้าง Request Object ของการจอง
-                        var requestObject = RequestBooking(
-                            stallId = stall.stallId,
-                            bookingUserId = userId.toIntOrNull() ?: 0, // แปลง userId เป็น Int, ถ้าไม่ได้ให้เป็น 0
-                            bookingCategoryId = 1,
-                            price = stall.price.toIntOrNull() ?: 0 // แปลง price เป็น Int, ถ้าไม่ได้ให้เป็น 0
-                        )
-                        // ซ่อน Dialog จอง
-                        showDialog.value = false
-                        scope.launch {
-                            bookingStall(requestObject)
-                        }
-
-
-
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f)
-                        .height(45.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFFFFA725)) // สีส้ม
-                ) {
-                    Text("จอง", color = Color.White, fontWeight = FontWeight.Bold)
-                }
-            }
-        )
-    }
-
-    @Composable
-    fun BookingSuccessDialog(onDismiss: () -> Unit) {
-        AlertDialog(
-            onDismissRequest = {  },
-            title = {
-                Text(
-                    text = "จองสำเร็จ!",
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2E7D32) // สีเขียวเข้ม
+                    content = { paddingValues ->  // รับ parameter paddingValues
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues) // ใช้ paddingValues ที่มาจาก Scaffold
+                                .padding(16.dp)  // สามารถใช้ padding เพิ่มเติมได้
+                        ) {
+                            Text(
+                                text = "ยินดีต้อนรับสู่ระบบจองพื้นที่สำหรับรายเดือน",
+                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp)
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Text(
+                                text = "กรุณาเลือกแผงที่ท่านต้องการจอง",
+                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
+                            )
+                        }
+                    }
                 )
-            },
-            text = {
-                Column {
-                    Text("คุณได้ทำการจองแผงเรียบร้อยแล้ว", fontSize = 16.sp)
-                    Text("ระบบจะพาท่านเข้าสู่หน้าชำระเงิน", fontSize = 16.sp)
-                }
-            },
-            confirmButton = {
-                Button(
-                    // กดเพื่อเข้าสู่หน้าขำระเงิน
-                    onClick = {
 
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(45.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFF2E7D32)) // สีเขียว
-                ) {
-                    Text("ตกลง", color = Color.White, fontWeight = FontWeight.Bold)
-                }
             }
-        )
+
+
+        }
     }
 
 
-
-    @Composable
-    fun LogoutConfirmationDialog(
-        onConfirm: () -> Unit,
-        onDismiss: () -> Unit
-    ) {
-        AlertDialog(
-            onDismissRequest = onDismiss,
-            title = { Text("ยืนยันการออกจากระบบ") },
-            text = { Text("คุณต้องการออกจากระบบใช่หรือไม่?") },
-            confirmButton = {
-                TextButton(
-                    onClick = onConfirm
-                ) {
-                    Text("ตกลง")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = onDismiss
-                ) {
-                    Text("ยกเลิก")
-                }
-            }
-        )
-    }
 }
