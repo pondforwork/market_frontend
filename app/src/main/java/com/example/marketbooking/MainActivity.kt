@@ -14,21 +14,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.marketbooking.api.RetrofitClient
+import com.example.marketbooking.utils.UserPreferences
 import com.example.marketbooking.view.RegularBookingActivity
 import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var userPreferences: UserPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    MainScreen()
-                }
+        userPreferences = UserPreferences(this)
+        val userFromStorage = userPreferences.getUser()
+
+        if(userFromStorage != null){
+            // ถ้ามี User อยู่และเป็นเข้าประจำ
+            if(userFromStorage.bookingCategoryId == 1){
+                startActivity(Intent(this, RegularBookingActivity::class.java))
+            }else{
+                // ถ้าเป็นขาจร
+                startActivity(Intent(this, RegularBookingActivity::class.java))
             }
+        }else{
+            startActivity(Intent(this, LoginActivity::class.java))
         }
+//        setContent {
+//            MaterialTheme {
+//                Surface(color = MaterialTheme.colorScheme.background) {
+//                    MainScreen()
+//                }
+//            }
+//        }
     }
 }
 
