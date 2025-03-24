@@ -5,6 +5,7 @@ import com.example.marketbooking.model.User
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -14,4 +15,9 @@ interface ApiService {
 
     @POST("register")
     suspend fun register(@Body user: User): Response<User>
+
+
+    data class LoginRequest(val email: String, val password: String)
+    @POST("login")
+    suspend fun login(@Body request: LoginRequest): Response<User>
 }

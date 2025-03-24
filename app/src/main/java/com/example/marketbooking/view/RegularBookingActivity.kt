@@ -1,5 +1,6 @@
 package com.example.marketbooking.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,8 +28,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import com.example.marketbooking.MainActivity
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.Stall
+import com.example.marketbooking.view.register.RegisterActivity
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,6 +49,7 @@ class RegularBookingActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val context = LocalContext.current // Add context
             isLoading = remember { mutableStateOf(true) }
             availableStalls = remember { mutableStateOf(emptyList()) }
             val scope = rememberCoroutineScope()
@@ -68,6 +73,18 @@ class RegularBookingActivity : ComponentActivity() {
                             .padding(16.dp)
                     ) {
                         Text("เมนู", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp))
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                                .clickable {
+                                    context.startActivity(Intent(context, MainActivity::class.java)) // Use context to start activity
+                                }
+                                .padding(16.dp)
+                        ) {
+                            Text("หน้าหลัก", color = Color.White, fontSize = 25.sp)
+                        }
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
                             modifier = Modifier
@@ -83,7 +100,8 @@ class RegularBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.DarkGray, shape = RoundedCornerShape(8.dp))
-                                .clickable { /* ไปหน้าตั้งค่า */ }
+                                .clickable {
+                                }
                                 .padding(16.dp)
                         ) {
                             Text("ประวัติการจองพื้นที่", color = Color.White, fontSize = 25.sp)

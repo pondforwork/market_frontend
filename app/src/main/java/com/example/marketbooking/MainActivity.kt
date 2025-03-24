@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.view.RegularBookingActivity
+import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
 import kotlinx.coroutines.launch
 
@@ -83,6 +84,17 @@ fun MainScreen() {
                 }
             ) {
                 Text("Go to Regular Booking")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Navigation Button
+            Button(
+                onClick = {
+                    context.startActivity(Intent(context, LoginActivity::class.java))
+                }
+            ) {
+                Text("Login Page")
             }
         }
     }
