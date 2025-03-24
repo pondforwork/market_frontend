@@ -1,5 +1,6 @@
 package com.example.marketbooking.view.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -17,12 +18,17 @@ import com.example.marketbooking.R
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.User
+import com.example.marketbooking.utils.UserPreferences
+import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.launch
 import retrofit2.http.Body
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var userPreferences: UserPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userPreferences = UserPreferences(this)
         setContent {
             LoginScreen()
         }
@@ -33,8 +39,24 @@ class LoginActivity : AppCompatActivity() {
             val request = ApiService.LoginRequest(email, password)
             val response = RetrofitClient.apiService.login(request)
             if (response.isSuccessful) {
-                Log.d("API_RESPONSE", "Success: ${response.body().toString()}")
-            } else {
+                response.body()?.let { user ->
+                    userPreferences.saveUser(user)
+                    // Login สำเร็จ เข้าสู่หน้าจอง
+                    val userResponse =  userPreferences.getUser()
+
+                    if(userResponse!=null){
+                        // ถ้าเป็น ประจำ
+                        if (userResponse.bookingCategoryId == 1) {
+                            startActivity(Intent(this, RegularBookingActivity::class.java))
+                        }else{
+                            // ขาจร
+                            startActivity(Intent(this, RegularBookingActivity::class.java))
+                        }
+                    }
+
+
+                }
+                } else {
                 Log.e("API_RESPONSE", "Error: ${response.errorBody()?.string()}")
             }
         } catch (e: Exception) {
