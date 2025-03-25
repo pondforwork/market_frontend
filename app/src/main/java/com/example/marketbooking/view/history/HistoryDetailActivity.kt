@@ -42,6 +42,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.api.RetrofitClient
+import com.example.marketbooking.model.BookingDetail
 import com.example.marketbooking.view.RegularBookingActivity
 import com.example.marketbooking.view.register.RegisterActivity
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var showConfirmDialog: MutableState<Boolean>
     private lateinit var showCancelDialog: MutableState<Boolean>
     private lateinit var bookingId: MutableState<Int>
-
+    private lateinit var bookingDetail : MutableState<BookingDetail>
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,11 +69,11 @@ class HistoryDetailActivity : ComponentActivity() {
 
             bookingId.value = intent.getStringExtra("booking_id")?.toIntOrNull() ?: -1
 
-
             // Get Detail ที่นี่
-//            LaunchedEffect(Unit) {
-//
-//            }
+            LaunchedEffect(Unit) {
+
+            }
+
             scope = rememberCoroutineScope()
             val context = LocalContext.current // Add context
             isLoading = remember { mutableStateOf(false) }
@@ -135,18 +136,23 @@ class HistoryDetailActivity : ComponentActivity() {
                                 )
 
                                 Text(
-                                    text = "ชื่อแผง: ${historys.firstOrNull()?.stallName ?: "N/A"}",
+                                    text = "ชื่อแผง: ${bookingDetail.value.stallName}",
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "วันที่จอง: ${historys.firstOrNull()?.createdAt?.let { formatDate(it) } ?: "N/A"}",
+                                    text = "วันที่จอง: ${bookingDetail.value.createdAt}",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "สถานะการชำระเงิน: ${historys.firstOrNull()?.status?.let { getThaiStatus(it) } ?: "N/A"}",
+                                    text = "ราคา: ${bookingDetail.value.price}",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "สถานะการชำระเงิน: ${bookingDetail.value.status.let { getThaiStatus(it) }}",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
