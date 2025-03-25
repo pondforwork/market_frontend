@@ -123,22 +123,38 @@ class HolidayActivity : ComponentActivity() {
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Button(
-                                        onClick = { showConfirmDialog.value = true },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = Color(0xFF4CAF50), // Green color for holiday request
-                                            contentColor = Color.White
-                                        ),
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .height(60.dp)
-                                            .width(200.dp)
-                                    ) {
+                                    Column {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.undraw_departing_010k),
+                                            contentDescription = "Example Image",
+                                            modifier = Modifier.size(230.dp)
+                                        )
+
                                         Text(
-                                            "ลาหยุดวันนี้",
-                                            fontSize = 20.sp,
+                                            "สามารถแจ้งหยุดร้านได้",
+                                            color = Color.Black,
+                                            textAlign = TextAlign.Center,
+                                            fontSize = 24.sp ,
                                             fontWeight = FontWeight.Bold
                                         )
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        Button(
+                                            onClick = { showConfirmDialog.value = true },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color(0xFF4CAF50), // Green color for holiday request
+                                                contentColor = Color.White
+                                            ),
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .height(45.dp)
+                                                .width(200.dp)
+                                        ) {
+                                            Text(
+                                                "ลาหยุดวันนี้",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
                                     }
                                 }
                             } else {
@@ -152,7 +168,7 @@ class HolidayActivity : ComponentActivity() {
                                         Image(
                                             painter = painterResource(id = R.drawable.undraw_access_denied_krem),
                                             contentDescription = "Example Image",
-                                            modifier = Modifier.size(150.dp)
+                                            modifier = Modifier.size(230.dp)
                                         )
 
 
