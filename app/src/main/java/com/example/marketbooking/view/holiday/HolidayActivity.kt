@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +37,10 @@ import kotlinx.coroutines.CoroutineScope
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.res.painterResource
+import com.example.marketbooking.R
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HolidayActivity : ComponentActivity() {
@@ -45,6 +50,7 @@ class HolidayActivity : ComponentActivity() {
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var showSuccessDialog: MutableState<Boolean>
+    private lateinit var showConfirmDialog: MutableState<Boolean>
 
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
@@ -75,6 +81,7 @@ class HolidayActivity : ComponentActivity() {
             val user  = userPreferences.getUser()
             canHoliday = remember { mutableStateOf(false) }
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
+            showConfirmDialog = remember { mutableStateOf(false) }
             historys = mutableListOf()
             if(user!=null){
                 userName = user.name
@@ -117,7 +124,7 @@ class HolidayActivity : ComponentActivity() {
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Button(
-                                        onClick = { /* Handle holiday request */ },
+                                        onClick = { showConfirmDialog.value = true },
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Color(0xFF4CAF50), // Green color for holiday request
                                             contentColor = Color.White
@@ -142,12 +149,13 @@ class HolidayActivity : ComponentActivity() {
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Warning,
-                                            contentDescription = "Warning",
-                                            tint = Color.Red,
-                                            modifier = Modifier.size(100.dp) // Increased size
+                                        Image(
+                                            painter = painterResource(id = R.drawable.undraw_access_denied_krem),
+                                            contentDescription = "Example Image",
+                                            modifier = Modifier.size(150.dp)
                                         )
+
+
                                         Text(
                                             "อยู่นอกเวลาแจ้งวันหยุด",
                                             color = Color.Red,
@@ -158,6 +166,30 @@ class HolidayActivity : ComponentActivity() {
                                 }
                             }
                         }
+                    }
+                    if (showConfirmDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = { showConfirmDialog.value = false },
+                            title = { Text("ยืนยันการหยุด") },
+                            text = { Text("คุณต้องการหยุดวันนี้หรือไม่?") },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showConfirmDialog.value = false
+                                        // Handle holiday request
+                                    }
+                                ) {
+                                    Text("ยืนยัน")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = { showConfirmDialog.value = false }
+                                ) {
+                                    Text("ยกเลิก")
+                                }
+                            }
+                        )
                     }
                 }
             )
