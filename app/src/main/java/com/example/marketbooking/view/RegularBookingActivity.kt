@@ -63,6 +63,7 @@ import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,6 +79,7 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var userName: String
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
+    private lateinit var term: MutableState<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +95,7 @@ class RegularBookingActivity : ComponentActivity() {
             showLogoutDialog = remember { mutableStateOf(false) }
             showFailDialog = remember { mutableStateOf(false) }
             userPreferences = UserPreferences(this)
+            term =  remember { mutableStateOf("") }
             val user  = userPreferences.getUser()
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
             if(user!=null){
@@ -120,9 +123,9 @@ class RegularBookingActivity : ComponentActivity() {
                 BookingFailDialog(onDismiss = { showFailDialog.value = false })
             }
 
-            // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine หรือ await async
+            // ใช้ LaunchedEffect เพื่อเรียกใช้ getAvailableStalls() ภายใน Coroutine
             LaunchedEffect(Unit) {
-                getAvailableStalls()
+                fetchData()
             }
 
             ModalNavigationDrawer(
@@ -313,7 +316,7 @@ class RegularBookingActivity : ComponentActivity() {
                                 IconButton(
                                     onClick = {
                                         scope.launch {
-                                            getAvailableStalls()
+                                            fetchData()
                                         }
                                     }
                                 ) {
@@ -359,19 +362,25 @@ class RegularBookingActivity : ComponentActivity() {
                                             modifier = Modifier.padding(horizontal = 16.dp),
                                         ) {
                                             Spacer(modifier = Modifier.height(15.dp))
-                                            Text(
-                                                text = "กฏของตลาด",
-                                                fontSize = 18.sp,
-                                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
-                                            )
+                                            Row {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Home,
+                                                    contentDescription = "Market Icon",
+                                                    modifier = Modifier.padding(end = 8.dp)
+                                                )
+                                                Text(
+                                                    text = "กฏของตลาด",
+                                                    fontSize = 18.sp,
+                                                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                                                )
+                                            }
+
                                             Spacer(modifier = Modifier.height(5.dp))
-                                            Text("กฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาด")
+                                            Text(term.value)
                                             Spacer(modifier = Modifier.height(15.dp))
 
                                         }
                                     }
-
-
                                     MarketGrid() // องค์ประกอบข้างล่างที่ทำให้ scroll ได้
                                 }
                             }
@@ -381,17 +390,34 @@ class RegularBookingActivity : ComponentActivity() {
                 )
 
             }
-
-
+        }
+    }
+    private suspend fun fetchData() {
+        try {
+            isLoading.value = true
+            getAvailableStalls()
+            getTerm()
+            isLoading.value = false
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
 
     private suspend fun getAvailableStalls() {
         try {
-            isLoading.value = true
             val response = RetrofitClient.apiService.getAvailableStalls()
             availableStalls.value = response.body() ?: emptyList()
-            isLoading.value = false
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
+    }
+
+    private suspend fun getTerm() {
+        try {
+            val response = RetrofitClient.apiService.getTerm()
+
+            term.value = response.body()?.term ?: ""
+
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
@@ -409,11 +435,6 @@ class RegularBookingActivity : ComponentActivity() {
 //                responseMessage = response.message()
                 showFailDialog.value = true
             }
-            // ถ้าไม่สำเร็จ
-//            isLoading.value = true
-//            val response = RetrofitClient.apiService.getAvailableStalls()
-//            availableStalls.value = response.body() ?: emptyList()
-//            isLoading.value = false
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
