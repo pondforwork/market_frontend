@@ -574,7 +574,9 @@ class RegularBookingActivity : ComponentActivity() {
     @Composable
     fun BookingSuccessDialog(onDismiss: () -> Unit) {
         AlertDialog(
-            onDismissRequest = {  },
+            onDismissRequest = {
+                // ไปหน้า Activity ประวัติ
+            },
             title = {
                 Text(
                     text = "จองสำเร็จ!",
@@ -585,14 +587,15 @@ class RegularBookingActivity : ComponentActivity() {
             text = {
                 Column {
                     Text("คุณได้ทำการจองแผงเรียบร้อยแล้ว", fontSize = 16.sp)
-                    Text("ระบบจะพาท่านเข้าสู่หน้าชำระเงิน", fontSize = 16.sp)
+                    Text("ระบบจะพาท่านเข้าสู่ประวัติการจอง", fontSize = 16.sp)
                 }
             },
             confirmButton = {
                 Button(
                     // กดเพื่อเข้าสู่หน้าขำระเงิน
                     onClick = {
-
+                        onDismiss()
+                        startActivity(Intent(this, HistoryActivity::class.java))
                     },
                     modifier = Modifier
                         .fillMaxWidth()

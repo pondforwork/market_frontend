@@ -187,6 +187,28 @@ class HolidayActivity : ComponentActivity() {
                                         )
                                     }
                                 }
+                            }else if(holidayStatus.value == "no_booking"){
+                                // หยุดไปแล้ว
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.undraw_departing_010k),
+                                            contentDescription = "Example Image",
+                                            modifier = Modifier.size(230.dp)
+                                        )
+
+                                        Text(
+                                            "ท่านยังไม่ได้ทำการจองพื้นที่",
+                                            color = Color.Black,
+                                            textAlign = TextAlign.Center,
+                                            fontSize = 24.sp ,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
                             }else{
                                 // หยุดไปแล้ว
                                 Box(

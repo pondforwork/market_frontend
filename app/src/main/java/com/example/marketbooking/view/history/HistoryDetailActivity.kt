@@ -143,6 +143,20 @@ class HistoryDetailActivity : ComponentActivity() {
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Button(
+                                        onClick = { /* Handle cancel action */ },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color.Green,
+                                            contentColor = Color.White
+                                        ),
+                                        shape = RoundedCornerShape(10.dp)
+                                    ) {
+                                        Text(
+                                            text = "ยืนยันการชำระเงิน",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                 }
                             }
                         }
