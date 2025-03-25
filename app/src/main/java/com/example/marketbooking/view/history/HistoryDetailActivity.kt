@@ -33,6 +33,8 @@ import com.example.marketbooking.utils.UserPreferences
 import com.example.marketbooking.model.BookingHistory
 import kotlinx.coroutines.CoroutineScope
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -129,6 +131,29 @@ class HistoryDetailActivity : ComponentActivity() {
                                     text = "สถานะการชำระเงิน: ${historys.firstOrNull()?.status?.let { getThaiStatus(it) } ?: "N/A"}",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
+                                // Test
+//                                if (historys.firstOrNull()?.status == "pending") {
+//                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    // ใช้ Row + Arrangement.End เพื่อให้ปุ่มไปอยู่ด้านขวา
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Button(
+                                            onClick = { /* Handle cancel action */ },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Red,
+                                                contentColor = Color.White
+                                            )
+                                        ) {
+                                            Text(
+                                                text = "ยกเลิก",
+                                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                                            )
+                                        }
+                                    }
+                                //}
                             }
                         }
                     }

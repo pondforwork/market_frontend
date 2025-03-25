@@ -194,29 +194,6 @@ class HistoryActivity : ComponentActivity() {
                     text = "วันที่จอง: ${formatDate(history.createdAt)}",
                     style = MaterialTheme.typography.bodySmall
                 )
-
-                if (history.status.lowercase() == "pending") {
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // ใช้ Row + Arrangement.End เพื่อให้ปุ่มไปอยู่ด้านขวา
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Button(
-                            onClick = { /* Handle cancel action */ },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Red,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(
-                                text = "ยกเลิก",
-                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
-                            )
-                        }
-                    }
-                }
             }
         }
     }
