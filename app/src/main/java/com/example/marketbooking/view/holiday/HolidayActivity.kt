@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.res.painterResource
 import com.example.marketbooking.R
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,23 +187,34 @@ class HolidayActivity : ComponentActivity() {
                     if (showConfirmDialog.value) {
                         AlertDialog(
                             onDismissRequest = { showConfirmDialog.value = false },
-                            title = { Text("ยืนยันการหยุด") },
-                            text = { Text("คุณต้องการหยุดวันนี้หรือไม่?") },
+                            title = {
+                                Text(
+                                    "ยืนยันการหยุด",
+                                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                                )
+                            },
+                            text = {
+                                Text(
+                                    "คุณต้องการหยุดวันนี้หรือไม่?",
+                                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                                )
+                            },
+                            // ยืนยันการหยุด
                             confirmButton = {
-                                TextButton(
+                                Button(
                                     onClick = {
-                                        showConfirmDialog.value = false
-                                        // Handle holiday request
-                                    }
+                                        showConfirmDialog.value  = false
+                                              },
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red) // ปรับปุ่มเป็นสีแดง
                                 ) {
-                                    Text("ยืนยัน")
+                                    Text("ยืนยัน", fontWeight = FontWeight.Bold, color = Color.White) // ตัวหนังสือหนา สีขาว
                                 }
                             },
                             dismissButton = {
-                                TextButton(
-                                    onClick = { showConfirmDialog.value = false }
+                                OutlinedButton(
+                                    onClick = { showDialog.value = false }
                                 ) {
-                                    Text("ยกเลิก")
+                                    Text("ยกเลิก", fontWeight = FontWeight.Bold)
                                 }
                             }
                         )
