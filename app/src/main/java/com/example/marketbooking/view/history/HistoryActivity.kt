@@ -99,7 +99,7 @@ class HistoryActivity : ComponentActivity() {
 
             scope = rememberCoroutineScope()
             val context = LocalContext.current // Add context
-            isLoading = remember { mutableStateOf(true) }
+            isLoading = remember { mutableStateOf(false) }
             availableStalls = remember { mutableStateOf(emptyList()) }
             val scope = rememberCoroutineScope()
             showDialog = remember { mutableStateOf(false) }
@@ -167,7 +167,9 @@ class HistoryActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { /* Handle card click */ }, // Make the card clickable
+                .clickable {
+                    startActivity(Intent(this, HistoryDetailActivity::class.java))
+                }, // Make the card clickable
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(8.dp)
         ) {

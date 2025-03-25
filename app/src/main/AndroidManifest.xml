@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MarketBooking"
         tools:targetApi="31">
         <activity
+            android:name=".view.history.HistoryDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.holiday.HolidayActivity"
             android:exported="false" />
         <activity
