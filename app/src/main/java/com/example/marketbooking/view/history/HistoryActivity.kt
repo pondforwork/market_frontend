@@ -160,45 +160,67 @@ class HistoryActivity : ComponentActivity() {
         }
     }
 
-    
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun HistoryCard(history: BookingHistory) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        ),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Composable
+    fun HistoryCard(history: BookingHistory) {
+        Card(
             modifier = Modifier
-                .padding(16.dp)
                 .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Text(
-                text = "แผง: ${history.stallName}",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "สถานะ: ${getThaiStatus(history.status)}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = getStatusColor(history.status)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "วันที่จอง: ${formatDate(history.createdAt)}",
-                style = MaterialTheme.typography.bodySmall
-            )
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "แผง: ${history.stallName}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "สถานะ: ${getThaiStatus(history.status)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = getStatusColor(history.status)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "วันที่จอง: ${formatDate(history.createdAt)}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                if (history.status.lowercase() == "pending") {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // ใช้ Row + Arrangement.End เพื่อให้ปุ่มไปอยู่ด้านขวา
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = { /* Handle cancel action */ },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                text = "ยกเลิก",
+                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
-}
 
-// Add these helper functions
+
+
+    // Add these helper functions
 fun getThaiStatus(status: String): String {
     return when (status.lowercase()) {
         "pending" -> "รอการชำระเงิน"
