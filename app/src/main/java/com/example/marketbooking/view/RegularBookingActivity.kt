@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Call
@@ -337,11 +339,43 @@ class RegularBookingActivity : ComponentActivity() {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(paddingValues),
+                                    .padding(paddingValues)
+                                    .verticalScroll(rememberScrollState()), // เพิ่มการเลื่อนแนวตั้ง
                                 contentAlignment = Alignment.Center
                             ) {
-                                MarketGrid()
+                                Column(
+                                    modifier = Modifier.fillMaxWidth() // ป้องกันการบีบตัว
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp,horizontal = 16.dp)
+                                            .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
+                                            .clip(RoundedCornerShape(16.dp))
+                                            .background(Color(0xFFFFC57F)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(horizontal = 16.dp),
+                                        ) {
+                                            Spacer(modifier = Modifier.height(15.dp))
+                                            Text(
+                                                text = "กฏของตลาด",
+                                                fontSize = 18.sp,
+                                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                                            )
+                                            Spacer(modifier = Modifier.height(5.dp))
+                                            Text("กฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาดกฏของตลาด")
+                                            Spacer(modifier = Modifier.height(15.dp))
+
+                                        }
+                                    }
+
+
+                                    MarketGrid() // องค์ประกอบข้างล่างที่ทำให้ scroll ได้
+                                }
                             }
+
                         }
                     }
                 )
@@ -397,7 +431,7 @@ class RegularBookingActivity : ComponentActivity() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(vertical = 5.dp, horizontal = 16.dp)
                 .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                 .clip(RoundedCornerShape(16.dp)) // ตัดพื้นหลังให้ตรงกับ Shape
                 .background(Color(0xFFFFC57F)),
