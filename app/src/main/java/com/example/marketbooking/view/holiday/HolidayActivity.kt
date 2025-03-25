@@ -36,14 +36,11 @@ import com.example.marketbooking.model.BookingHistory
 import kotlinx.coroutines.CoroutineScope
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.res.painterResource
 import com.example.marketbooking.R
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.TextButton
 import com.example.marketbooking.api.ApiService
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import kotlinx.coroutines.launch
 
@@ -57,7 +54,6 @@ class HolidayActivity : ComponentActivity() {
     private lateinit var showSuccessDialog: MutableState<Boolean>
     private lateinit var showConfirmDialog: MutableState<Boolean>
     private lateinit var showFailureDialog: MutableState<Boolean>
-
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
@@ -151,7 +147,8 @@ class HolidayActivity : ComponentActivity() {
                                                 containerColor = Color(0xFF4CAF50), // Green color for holiday request
                                                 contentColor = Color.White
                                             ),
-                                            modifier = Modifier
+                                            shape = RoundedCornerShape(10.dp),
+                                                    modifier = Modifier
                                                 .padding(16.dp)
                                                 .height(45.dp)
                                                 .width(200.dp)

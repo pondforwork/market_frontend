@@ -42,12 +42,8 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 class HistoryDetailActivity : ComponentActivity() {
     private lateinit var isLoading: MutableState<Boolean>
-    private lateinit var availableStalls: MutableState<List<Stall>>
     private lateinit var showDialog: MutableState<Boolean>
-    private lateinit var selectedStall: MutableState<Stall?>
-    private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var showSuccessDialog: MutableState<Boolean>
-
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
@@ -153,11 +149,8 @@ class HistoryDetailActivity : ComponentActivity() {
                     }
                 }
             )
-
-
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(dateString: String): String {
@@ -172,7 +165,6 @@ class HistoryDetailActivity : ComponentActivity() {
         }
     }
 
-    // Add these helper functions
     fun getThaiStatus(status: String): String {
         return when (status.lowercase()) {
             "pending" -> "รอการชำระเงิน"
