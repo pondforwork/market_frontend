@@ -40,6 +40,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import com.example.marketbooking.api.ApiService
+import com.example.marketbooking.api.RetrofitClient
+import com.example.marketbooking.view.RegularBookingActivity
+import com.example.marketbooking.view.register.RegisterActivity
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HistoryDetailActivity : ComponentActivity() {
@@ -53,11 +58,17 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var historys: List<BookingHistory>
     private lateinit var showConfirmDialog: MutableState<Boolean>
     private lateinit var showCancelDialog: MutableState<Boolean>
+    private lateinit var bookingId: MutableState<Int>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            bookingId = remember { mutableIntStateOf(-1) }
+
+            bookingId.value = intent.getStringExtra("booking_id")?.toIntOrNull() ?: -1
+
+
             // Get Detail ที่นี่
 //            LaunchedEffect(Unit) {
 //
@@ -118,6 +129,12 @@ class HistoryDetailActivity : ComponentActivity() {
                                     .padding(16.dp)
                             ) {
                                 Text(
+                                    text = "Id: ${bookingId.value}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                Text(
                                     text = "ชื่อแผง: ${historys.firstOrNull()?.stallName ?: "N/A"}",
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.Bold
@@ -174,19 +191,41 @@ class HistoryDetailActivity : ComponentActivity() {
             if (showConfirmDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showConfirmDialog.value = false },
-                    title = { Text("ยืนยันการชำระเงิน") },
-                    text = { Text("คุณแน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน?") },
+                    title = { 
+                        Text(
+                            text = "ยืนยันการชำระเงิน", 
+                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+                        ) 
+                    },
+                    text = { 
+                        Text(
+                            text = "คุณแน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน?", 
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                        ) 
+                    },
                     confirmButton = {
-                        TextButton(onClick = { 
-                            showConfirmDialog.value = false
-                            // Handle confirm payment action
-                        }) {
-                            Text("ยืนยัน")
+                        TextButton(
+                            onClick = { 
+                                showConfirmDialog.value = false
+                                // Handle confirm payment action
+                            },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(
+                                text = "ยืนยัน", 
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showConfirmDialog.value = false }) {
-                            Text("ยกเลิก")
+                        TextButton(
+                            onClick = { showConfirmDialog.value = false },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(
+                                text = "ยกเลิก", 
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 )
@@ -195,19 +234,43 @@ class HistoryDetailActivity : ComponentActivity() {
             if (showCancelDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showCancelDialog.value = false },
-                    title = { Text("ยกเลิกการจอง") },
-                    text = { Text("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?") },
+                    title = { 
+                        Text(
+                            text = "ยกเลิกการจอง", 
+                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+                        ) 
+                    },
+                    text = { 
+                        Text(
+                            text = "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?", 
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                        ) 
+                    },
                     confirmButton = {
-                        TextButton(onClick = { 
-                            showCancelDialog.value = false
-                            // Handle cancel booking action
-                        }) {
-                            Text("ยืนยัน")
+                        TextButton(
+                            onClick = { 
+                                showCancelDialog.value = false
+                                scope.launch {
+                                    cancelBooking()
+                                }
+                            },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(
+                                text = "ยืนยัน", 
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showCancelDialog.value = false }) {
-                            Text("ยกเลิก")
+                        TextButton(
+                            onClick = { showCancelDialog.value = false },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(
+                                text = "ยกเลิก", 
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 )
@@ -235,6 +298,22 @@ class HistoryDetailActivity : ComponentActivity() {
             "accepted" -> "อนุมัติแล้ว"
             "rejected" -> "ปฏิเสธ"
             else -> status
+        }
+    }
+
+    private suspend fun cancelBooking() {
+        try {
+
+            val response = RetrofitClient.apiService.cancelBooking(ApiService.CancelRequest(19.toString()))
+            println(response.toString())
+            // ถ้ายกเลิกสำเร็จย้อนกลับไปหน้าหลัก
+            if(response.isSuccessful){
+                startActivity(Intent(this, RegularBookingActivity::class.java))
+            }else{
+                startActivity(Intent(this, RegularBookingActivity::class.java))
+            }
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
 }

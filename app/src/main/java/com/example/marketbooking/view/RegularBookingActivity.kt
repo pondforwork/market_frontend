@@ -77,6 +77,7 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var showFailDialog: MutableState<Boolean>
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
+    private lateinit var shopName: String
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var term: MutableState<String>
@@ -100,6 +101,7 @@ class RegularBookingActivity : ComponentActivity() {
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
             if(user!=null){
                 userName = user.name
+                shopName = user.shopName
                 userId = user.userId.toString()
             }
 
@@ -144,7 +146,12 @@ class RegularBookingActivity : ComponentActivity() {
                                 .fillMaxWidth(),
                                     contentAlignment = Alignment.TopStart
                         ) {
-                            Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+                            Column {
+                                Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+
+                                Text("ร้าน ${shopName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+
+                            }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Spacer(modifier = Modifier.height(8.dp))

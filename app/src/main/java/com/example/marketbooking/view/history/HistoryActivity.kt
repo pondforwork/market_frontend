@@ -168,7 +168,12 @@ class HistoryActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
                 .clickable {
-                    startActivity(Intent(this, HistoryDetailActivity::class.java))
+//                    startActivity(Intent(this, HistoryDetailActivity::class.java))
+                    val intent = Intent(this, HistoryDetailActivity::class.java).apply {
+                        putExtra("booking_id", history.id.toString())
+                    }
+                    startActivity(intent)
+
                 }, // Make the card clickable
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(8.dp)

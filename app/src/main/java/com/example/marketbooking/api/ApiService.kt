@@ -43,4 +43,8 @@ interface ApiService {
     data class MakeHolidayRequest(val booking_user_id: String)
     @POST("makeholiday")
     suspend fun makeHoliday(@Body request: MakeHolidayRequest): Response<isHolidaySuccess>
+
+    data class CancelRequest(val stall_booking_requests_id: String)
+    @POST("cancel_booking")
+    suspend fun cancelBooking(@Body cancelRequest: CancelRequest): Response<Unit>
 }
