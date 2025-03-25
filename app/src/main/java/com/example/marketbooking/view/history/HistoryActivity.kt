@@ -166,7 +166,8 @@ class HistoryActivity : ComponentActivity() {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp),
+                .padding(vertical = 4.dp)
+                .clickable { /* Handle card click */ }, // Make the card clickable
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
