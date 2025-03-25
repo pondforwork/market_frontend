@@ -152,38 +152,6 @@ class RegularBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
-                                .clickable {
-                                    // เปิดหน้า Home
-                                    startActivity(Intent(context, HomeActivity::class.java))
-
-                                }
-                                .padding(16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
-                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Home, // ใช้ไอคอน "ประวัติ"
-                                    contentDescription = "ประวัติการจอง",
-                                    tint = Color.White, // ไอคอนเป็นสีขาว
-                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
-                                )
-                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
-                                Text(
-                                    "หน้าหลัก",
-                                    color = Color.White,
-                                    fontSize = 25.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
                                 .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
                                 .padding(16.dp)
 

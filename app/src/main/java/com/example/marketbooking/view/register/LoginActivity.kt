@@ -173,6 +173,22 @@ class LoginActivity : AppCompatActivity() {
                             Text("เข้าสู่ระบบ", color = Color.White) // ปรับสีตัวอักษรให้ตัดกับพื้นหลัง
                         }
 
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = {
+                                // Handle registration button click
+                                startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            shape = MaterialTheme.shapes.medium,
+                            colors = ButtonDefaults.buttonColors(Color(0xFFC1D8C3)) // เปลี่ยนสีพื้นหลัง
+                        ) {
+                            Text("สมัครสมาชิก", color = Color.White) // ปรับสีตัวอักษรให้ตัดกับพื้นหลัง
+                        }
+
                     }
                 }
             }
