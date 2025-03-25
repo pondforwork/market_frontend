@@ -38,6 +38,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HistoryDetailActivity : ComponentActivity() {
@@ -48,7 +50,10 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var userName: String
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
-    private lateinit var historys: List<BookingHistory>;
+    private lateinit var historys: List<BookingHistory>
+    private lateinit var showConfirmDialog: MutableState<Boolean>
+    private lateinit var showCancelDialog: MutableState<Boolean>
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +71,8 @@ class HistoryDetailActivity : ComponentActivity() {
             val user  = userPreferences.getUser()
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
             historys = mutableListOf()
+            showConfirmDialog = remember { mutableStateOf(false) }
+            showCancelDialog = remember { mutableStateOf(false) }
             if(user!=null){
                 userName = user.name
                 userId = user.userId.toString()
@@ -131,7 +138,7 @@ class HistoryDetailActivity : ComponentActivity() {
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     Button(
-                                        onClick = { /* Handle cancel action */ },
+                                        onClick = { showCancelDialog.value = true },
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Color.Red,
                                             contentColor = Color.White
@@ -145,7 +152,7 @@ class HistoryDetailActivity : ComponentActivity() {
                                     }
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Button(
-                                        onClick = { /* Handle cancel action */ },
+                                        onClick = { showConfirmDialog.value = true },
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Color.Green,
                                             contentColor = Color.White
@@ -163,6 +170,48 @@ class HistoryDetailActivity : ComponentActivity() {
                     }
                 }
             )
+
+            if (showConfirmDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { showConfirmDialog.value = false },
+                    title = { Text("ยืนยันการชำระเงิน") },
+                    text = { Text("คุณแน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน?") },
+                    confirmButton = {
+                        TextButton(onClick = { 
+                            showConfirmDialog.value = false
+                            // Handle confirm payment action
+                        }) {
+                            Text("ยืนยัน")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showConfirmDialog.value = false }) {
+                            Text("ยกเลิก")
+                        }
+                    }
+                )
+            }
+
+            if (showCancelDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { showCancelDialog.value = false },
+                    title = { Text("ยกเลิกการจอง") },
+                    text = { Text("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?") },
+                    confirmButton = {
+                        TextButton(onClick = { 
+                            showCancelDialog.value = false
+                            // Handle cancel booking action
+                        }) {
+                            Text("ยืนยัน")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showCancelDialog.value = false }) {
+                            Text("ยกเลิก")
+                        }
+                    }
+                )
+            }
         }
     }
 
