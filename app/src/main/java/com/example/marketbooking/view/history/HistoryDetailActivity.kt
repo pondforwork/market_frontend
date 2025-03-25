@@ -57,12 +57,10 @@ class HistoryDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             // Get Detail ที่นี่
 //            LaunchedEffect(Unit) {
 //
 //            }
-
             scope = rememberCoroutineScope()
             val context = LocalContext.current // Add context
             isLoading = remember { mutableStateOf(false) }
@@ -85,7 +83,7 @@ class HistoryDetailActivity : ComponentActivity() {
                             titleContentColor = Color.White
                         ),
                         title = {
-                            Text("ประวัติการจองพื้นที่", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold))
+                            Text("รายละเอียดการจองพื้นที่", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold))
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
@@ -131,29 +129,25 @@ class HistoryDetailActivity : ComponentActivity() {
                                     text = "สถานะการชำระเงิน: ${historys.firstOrNull()?.status?.let { getThaiStatus(it) } ?: "N/A"}",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
-                                // Test
-//                                if (historys.firstOrNull()?.status == "pending") {
-//                                    Spacer(modifier = Modifier.height(8.dp))
-
-                                    // ใช้ Row + Arrangement.End เพื่อให้ปุ่มไปอยู่ด้านขวา
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Button(
+                                        onClick = { /* Handle cancel action */ },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color.Red,
+                                            contentColor = Color.White
+                                        ),
+                                        shape = RoundedCornerShape(10.dp)
                                     ) {
-                                        Button(
-                                            onClick = { /* Handle cancel action */ },
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color.Red,
-                                                contentColor = Color.White
-                                            )
-                                        ) {
-                                            Text(
-                                                text = "ยกเลิก",
-                                                fontWeight = FontWeight.Bold // ทำให้ตัวหนา
-                                            )
-                                        }
+                                        Text(
+                                            text = "ยกเลิก",
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     }
-                                //}
+                                }
                             }
                         }
                     }
