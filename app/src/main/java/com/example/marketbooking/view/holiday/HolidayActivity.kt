@@ -59,7 +59,9 @@ class HolidayActivity : ComponentActivity() {
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var historys: List<BookingHistory>;
-    private lateinit var canHoliday: MutableState<Boolean>
+//    private lateinit var canHoliday: MutableState<Boolean>
+
+    private lateinit var holidayStatus: MutableState<String>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +83,10 @@ class HolidayActivity : ComponentActivity() {
             showLogoutDialog = remember { mutableStateOf(false) }
             userPreferences = UserPreferences(this)
             val user  = userPreferences.getUser()
-            canHoliday = remember { mutableStateOf(false) }
+//            canHoliday = remember { mutableStateOf(false) }
+
+            holidayStatus = remember { mutableStateOf("") }
+
             showSuccessDialog = remember { mutableStateOf(false) } // สร้าง state คุม Dialog สำเร็จ
             showConfirmDialog = remember { mutableStateOf(false) }
             showFailureDialog = remember { mutableStateOf(false) }
@@ -121,7 +126,7 @@ class HolidayActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                         } else {
-                            if (canHoliday.value) {
+                            if (holidayStatus.value == "available") {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
@@ -161,7 +166,7 @@ class HolidayActivity : ComponentActivity() {
                                         }
                                     }
                                 }
-                            } else {
+                            } else if (holidayStatus.value == "unavailable") {
                                 Box(
                                     contentAlignment = Alignment.Center,
                                     modifier = Modifier.fillMaxSize()
@@ -174,13 +179,33 @@ class HolidayActivity : ComponentActivity() {
                                             contentDescription = "Example Image",
                                             modifier = Modifier.size(230.dp)
                                         )
-
-
                                         Text(
                                             "อยู่นอกเวลาแจ้งวันหยุด",
                                             color = Color.Red,
                                             textAlign = TextAlign.Center,
                                             fontSize = 24.sp // Increased font size
+                                        )
+                                    }
+                                }
+                            }else{
+                                // หยุดไปแล้ว
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.undraw_departing_010k),
+                                            contentDescription = "Example Image",
+                                            modifier = Modifier.size(230.dp)
+                                        )
+
+                                        Text(
+                                            "คุณได้ทำการแจ้งหยุดไปแล้ว",
+                                            color = Color.Black,
+                                            textAlign = TextAlign.Center,
+                                            fontSize = 24.sp ,
+                                            fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }
@@ -240,8 +265,15 @@ class HolidayActivity : ComponentActivity() {
     private suspend fun iscanHoliday() {
         try {
             isLoading.value = true
-            val holidayResponse = RetrofitClient.apiService.canHoliday()
-            canHoliday.value = holidayResponse.isSuccessful && holidayResponse.body()?.status == "available"
+            val holidayResponse = RetrofitClient.apiService.canHoliday(userId.toString())
+//            canHoliday.value = holidayResponse.isSuccessful && holidayResponse.body()?.status == "available"
+
+            if(holidayResponse.isSuccessful && holidayResponse.body()?.status!=null){
+                holidayStatus.value = holidayResponse.body()?.status.toString()
+                println(holidayStatus.value)
+            }
+
+
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
             historys = emptyList()

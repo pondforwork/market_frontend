@@ -12,6 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @GET("available_stalls")
@@ -32,8 +33,12 @@ interface ApiService {
     @POST("history")
     suspend fun getHistory(@Body request: HistoryRequest): Response<List<BookingHistory>>
 
+//    @GET("canholiday")
+//    suspend fun canHoliday(@Body booking_user_id : String): Response<CanHoliday>
+
     @GET("canholiday")
-    suspend fun canHoliday(): Response<CanHoliday>
+    suspend fun canHoliday(@Query("booking_user_id") bookingUserId: String): Response<CanHoliday>
+
 
     data class MakeHolidayRequest(val booking_user_id: String)
     @POST("makeholiday")
