@@ -5,6 +5,7 @@ import com.example.marketbooking.model.CanHoliday
 import com.example.marketbooking.model.RequestBooking
 import com.example.marketbooking.model.Stall
 import com.example.marketbooking.model.User
+import com.example.marketbooking.model.isHolidaySuccess
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -34,4 +35,7 @@ interface ApiService {
     @GET("canholiday")
     suspend fun canHoliday(): Response<CanHoliday>
 
+    data class MakeHolidayRequest(val booking_user_id: String)
+    @POST("makeholiday")
+    suspend fun makeHoliday(@Body request: MakeHolidayRequest): Response<isHolidaySuccess>
 }

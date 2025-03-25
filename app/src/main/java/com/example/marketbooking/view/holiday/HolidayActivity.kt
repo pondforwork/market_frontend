@@ -42,6 +42,7 @@ import com.example.marketbooking.R
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
+import com.example.marketbooking.api.ApiService
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HolidayActivity : ComponentActivity() {
@@ -235,6 +236,26 @@ class HolidayActivity : ComponentActivity() {
             historys = emptyList()
         } finally {
             isLoading.value = false
+        }
+    }
+
+    private suspend fun makeHoliday() {
+        try {
+            val requestObj = ApiService.MakeHolidayRequest(userId.toString())
+            val holidayResponse = RetrofitClient.apiService.makeHoliday(requestObj)
+            if(holidayResponse.isSuccessful){
+                // ถ้าตอบกลับมาว่าหยุดได้
+//                 if(holidayResponse.body()?.status == "success"){
+//
+//                 }else{
+////
+//                 }
+
+            }
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        } finally {
+//            isLoading.value = false
         }
     }
 }
