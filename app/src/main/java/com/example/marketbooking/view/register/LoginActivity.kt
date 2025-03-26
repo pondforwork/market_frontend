@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.utils.UserPreferences
+import com.example.marketbooking.view.DailyBookingActivity
 import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.launch
 
@@ -62,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(Intent(this, RegularBookingActivity::class.java))
                         } else {
                             finish()
-                            startActivity(Intent(this, RegularBookingActivity::class.java))
+                            startActivity(Intent(this, DailyBookingActivity::class.java))
                         }
                     }
                 }

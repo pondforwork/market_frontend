@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.utils.UserPreferences
+import com.example.marketbooking.view.DailyBookingActivity
 import com.example.marketbooking.view.RegularBookingActivity
 import com.example.marketbooking.view.register.LoginActivity
 import com.example.marketbooking.view.register.RegisterActivity
@@ -35,100 +36,70 @@ class MainActivity : ComponentActivity() {
                 val intent = Intent(this, RegularBookingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-
-//                startActivity(Intent(this, RegularBookingActivity::class.java))
             }else{
-                val intent = Intent(this, RegularBookingActivity::class.java)
+                val intent = Intent(this, DailyBookingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 // ถ้าเป็นขาจร
-                startActivity(Intent(this, RegularBookingActivity::class.java))
+                startActivity(Intent(this, DailyBookingActivity::class.java))
             }
         }else{
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
-//        setContent {
-//            MaterialTheme {
-//                Surface(color = MaterialTheme.colorScheme.background) {
-//                    MainScreen()
-//                }
-//            }
-//        }
     }
 }
-
-@Composable
-fun MainScreen() {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Hello World!")
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    context.startActivity(Intent(context, RegisterActivity::class.java))
-                }
-            ) {
-                Text("ลงทะเบียนเข้าใช้งาน")
-            }
-
-
+//
+//@Composable
+//fun MainScreen() {
+//    val context = LocalContext.current
+//    val scope = rememberCoroutineScope()
+//
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Column(
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.Center
+//        ) {
+//            Text(text = "Hello World!")
+//            Spacer(modifier = Modifier.height(16.dp))
+//
 //            Button(
 //                onClick = {
-//                    scope.launch {
-//                        try {
-//                            val response = RetrofitClient.apiService.getAvailableStalls()
-//                            if (response.isSuccessful) {
-//                                Log.d("API_RESPONSE", "Success: ${response.body()}")
-//                            } else {
-//                                Log.e("API_RESPONSE", "Error: ${response.errorBody()?.string()}")
-//                            }
-//                        } catch (e: Exception) {
-//                            Log.e("API_RESPONSE", "Exception: ${e.message}")
-//                        }
-//                    }
+//                    context.startActivity(Intent(context, RegisterActivity::class.java))
 //                }
 //            ) {
-//                Text("Call API")
+//                Text("ลงทะเบียนเข้าใช้งาน")
 //            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Navigation Button
-            Button(
-                onClick = {
-                    context.startActivity(Intent(context, RegularBookingActivity::class.java))
-                }
-            ) {
-                Text("Go to Regular Booking")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Navigation Button
-            Button(
-                onClick = {
-                    context.startActivity(Intent(context, LoginActivity::class.java))
-                }
-            ) {
-                Text("Login Page")
-            }
-        }
-    }
-}
+//
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Button(
+//                onClick = {
+//                    context.startActivity(Intent(context, RegularBookingActivity::class.java))
+//                }
+//            ) {
+//                Text("Go to Regular Booking")
+//            }
+//
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            // Navigation Button
+//            Button(
+//                onClick = {
+//                    context.startActivity(Intent(context, LoginActivity::class.java))
+//                }
+//            ) {
+//                Text("Login Page")
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun DefaultPreview() {
     MaterialTheme {
-        MainScreen()
+//        MainScreen()
     }
 }

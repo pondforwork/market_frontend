@@ -145,11 +145,25 @@ class HistoryActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                         } else {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                items(historys) { history ->
-                                    HistoryCard(history)
+                            if (historys.isEmpty()) {
+                                // Show message when no booking history
+                                Text(
+                                    text = "ยังไม่ได้ทำการจอง",
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        color = Color.Gray,
+                                        textAlign = TextAlign.Center
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 16.dp)
+                                )
+                            } else {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    items(historys) { history ->
+                                        HistoryCard(history)
+                                    }
                                 }
                             }
                         }
