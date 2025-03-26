@@ -164,8 +164,9 @@ class HistoryActivity : ComponentActivity() {
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(
-                containerColor = PastelMint // ใช้สี PastelMint สำหรับพื้นหลังของ Card
-            )        ) {
+                containerColor = PaleLime // ใช้สี PaleLime สำหรับพื้นหลังของ Card
+            )
+        ) {
             Column(
                 modifier = Modifier
                     .padding(16.dp)

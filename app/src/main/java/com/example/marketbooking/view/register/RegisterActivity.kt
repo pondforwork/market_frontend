@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -31,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
@@ -48,6 +50,10 @@ import com.example.marketbooking.model.BookingCategory
 import com.example.marketbooking.model.Stall
 import com.example.marketbooking.model.User
 import kotlinx.coroutines.launch
+val DarkForest = Color(0xFF102F15)
+val Sage = Color(0xFF728C5A)
+val PaleLime = Color(0xFFEAF1B1)
+val PastelMint = Color(0xFFEBFADC)
 
 @OptIn(ExperimentalMaterial3Api::class)
 class RegisterActivity : AppCompatActivity() {
@@ -80,172 +86,150 @@ class RegisterActivity : AppCompatActivity() {
             showDialog = remember { mutableStateOf(false) }
             val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-
-            ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    Column(
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = DarkForest, // ใช้สี DarkForest
+                            titleContentColor = Color.White
+                        ),
+                        title = {
+                            Text("ลงทะเบียนเข้าใช้งาน")
+                        }
+                    )
+                },
+                content = { paddingValues ->
+                    Box(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .background(Color.LightGray)
-                            .padding(16.dp)
+                            .fillMaxSize()
+                            .background(PastelMint) // พื้นหลังสี PastelMint
+                            .padding(paddingValues)
                     ) {
-                        Text("เมนู", style = MaterialTheme.typography.headlineSmall)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text("หน้าแรก", modifier = Modifier.clickable { /* ไปหน้าแรก */ })
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("การตั้งค่า", modifier = Modifier.clickable { /* ไปหน้าตั้งค่า */ })
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("ออกจากระบบ", modifier = Modifier.clickable { /* ออกจากระบบ */ })
-                    }
-                }
-            ) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color.Green,
-                                titleContentColor = Color.White
-                            ),
-                            title = {
-                                Text("ลงทะเบียนเข้าใช้งาน")
-                            }
-                        )
-                    },
-                    content = { paddingValues ->
-                        Box (
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues),
-//                        contentAlignment = Alignment.Center
-                        ) {
-
-                            if (showDialog.value ) {
-                                SuccessDialog(
-                                    onDismiss = { showDialog.value = false }
-                                )
-                            }
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-
-
-                                OutlinedTextField(
-                                    value = email.value,  // Changed: access value property
-                                    onValueChange = { email.value = it },  // Changed: set value property
-                                    label = { Text("Email") },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-                                OutlinedTextField(
-                                    value = password.value,
-                                    onValueChange = { password.value = it },
-                                    label = { Text("Password") },
-                                    modifier = Modifier.fillMaxWidth(),
-//                                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-//                                trailingIcon = {
-//                                    val image = if (passwordVisible)
-//                                        Icons.Filled.Visibility
-//                                    else Icons.Filled.VisibilityOff
-//
-//                                    IconButton(onClick = {
-//                                        passwordVisible = !passwordVisible
-//                                    }) {
-//                                        Icon(imageVector = image, "")
-//                                    }
-//                                }
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                OutlinedTextField(
-                                    value = shopName.value,
-                                    onValueChange = { shopName.value = it },
-                                    label = { Text("ชื่อร้าน") },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                OutlinedTextField(
-                                    value = firstName.value,
-                                    onValueChange = { firstName.value = it },
-                                    label = { Text("ชื่อ-สกุล") },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                OutlinedTextField(
-                                    value = tel.value,
-                                    onValueChange = { tel.value = it },
-                                    label = { Text("หมายเลขโทรศัพท์") },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                OutlinedTextField(
-                                    value = selectedCategory.value.categoryName,
-                                    onValueChange = { },
-                                    readOnly = true,
-                                    label = { Text("ประเภทลูกค้า") },
-                                    trailingIcon = {
-                                        IconButton(onClick = { expanded.value = true }) {
-                                            Icon(Icons.Default.ArrowDropDown, "dropdown arrow")
-                                        }
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                DropdownMenu(
-                                    expanded = expanded.value,
-                                    onDismissRequest = { expanded.value = false },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    categories.forEach { category ->
-                                        DropdownMenuItem(
-                                            text = { Text(category.categoryName) },
-                                            onClick = {
-                                                selectedCategory.value = category
-                                                expanded.value = false
-                                            }
-                                        )
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(16.dp))
-
-                                Button(
-                                    onClick = {
-                                        // Log all the information
-                                        println("Email: ${email.value}")
-                                        println("Password: ${password.value}")
-                                        println("Shop Name: ${shopName.value}")
-                                        println("First Name: ${firstName.value}")
-                                        println("Selected Category Id: ${selectedCategory.value.id}")
-
-                                        scope.launch {
-                                            register()
-                                        }                                },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = ButtonColors(containerColor = Color.Green, contentColor = Color.White , disabledContentColor = Color.Gray, disabledContainerColor = Color.Gray) // เปลี่ยนเป็นสีเขียว
-                                ) {
-                                    Text("ลงทะเบียน")
-                                }
-                            }
+                        if (showDialog.value) {
+                            SuccessDialog(
+                                onDismiss = { showDialog.value = false }
+                            )
                         }
 
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Sage, // ใช้ Sage เป็นสีขอบเมื่อโฟกัส
+                                unfocusedBorderColor = DarkForest, // ใช้ DarkForest เป็นสีขอบเมื่อไม่ได้โฟกัส
+                                focusedTextColor = DarkForest,
+                            )
+
+                            OutlinedTextField(
+                                value = email.value,
+                                onValueChange = { email.value = it },
+                                label = { Text("Email", color = DarkForest) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            OutlinedTextField(
+                                value = password.value,
+                                onValueChange = { password.value = it },
+                                label = { Text("Password", color = DarkForest) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            OutlinedTextField(
+                                value = shopName.value,
+                                onValueChange = { shopName.value = it },
+                                label = { Text("ชื่อร้าน", color = DarkForest) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            OutlinedTextField(
+                                value = firstName.value,
+                                onValueChange = { firstName.value = it },
+                                label = { Text("ชื่อ-สกุล", color = DarkForest) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            OutlinedTextField(
+                                value = tel.value,
+                                onValueChange = { tel.value = it },
+                                label = { Text("หมายเลขโทรศัพท์", color = DarkForest) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            OutlinedTextField(
+                                value = selectedCategory.value.categoryName,
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("ประเภทลูกค้า", color = DarkForest) },
+                                trailingIcon = {
+                                    IconButton(onClick = { expanded.value = true }) {
+                                        Icon(Icons.Default.ArrowDropDown, "dropdown arrow")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = textFieldColors
+                            )
+
+                            DropdownMenu(
+                                expanded = expanded.value,
+                                onDismissRequest = { expanded.value = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                categories.forEach { category ->
+                                    DropdownMenuItem(
+                                        text = { Text(category.categoryName) },
+                                        onClick = {
+                                            selectedCategory.value = category
+                                            expanded.value = false
+                                        }
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        register()
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = MaterialTheme.shapes.medium,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = DarkForest, // ใช้สี DarkForest สำหรับปุ่ม
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text("ลงทะเบียน")
+                            }
+                        }
                     }
-                )
-            }
-
-
-
+                }
+            )
         }
-
     }
 
     private suspend fun register() {
         val user = User(
-            userId =  null,
+            userId = null,
             email = email.value,
             password = password.value,
             shopName = shopName.value,
@@ -256,7 +240,6 @@ class RegisterActivity : AppCompatActivity() {
 
         try {
             val response = RetrofitClient.apiService.register(user)
-            // ถ้าผ่าน ให้แสดง Dialog สำเร็จ
             showDialog.value = true
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
@@ -268,11 +251,7 @@ class RegisterActivity : AppCompatActivity() {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text("สมัครสมาชิกสำเร็จ") },
-            text = {
-                Column {
-                    Text("สำเร็จ")
-                }
-            },
+            text = { Text("สำเร็จ") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
                     Text("ตกลง")

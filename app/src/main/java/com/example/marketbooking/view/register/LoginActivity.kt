@@ -30,7 +30,11 @@ import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var userPreferences: UserPreferences
-
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
+    val MainBackground = Color(0xFFF5F5F5) // สีพื้นหลังหลักใหม่
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userPreferences = UserPreferences(this)
@@ -90,20 +94,10 @@ class LoginActivity : AppCompatActivity() {
         var passwordVisible by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
-        val gradientColors = listOf(
-            Color(0xFFFFa725),  // FFA725
-            Color(0xFFC1D8C3),  // C1D8C3
-            Color(0xFFFFF5E4) ,  // FFF5E4
-            Color.Red   // FFF5E4
-
-        )
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(colors = gradientColors)
-                )
+                .background(MainBackground) // ใช้สีพื้นหลังหลักใหม่
         ) {
             Column(
                 modifier = Modifier
@@ -116,7 +110,8 @@ class LoginActivity : AppCompatActivity() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = PaleLime) // การ์ดสี PaleLime
                 ) {
                     Column(
                         modifier = Modifier
@@ -127,13 +122,14 @@ class LoginActivity : AppCompatActivity() {
                         Text(
                             "เข้าสู่ระบบ",
                             style = MaterialTheme.typography.headlineMedium,
+                            color = DarkForest, // เปลี่ยนสีข้อความให้เข้มขึ้น
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
 
                         OutlinedTextField(
                             value = email,
                             onValueChange = { email = it },
-                            label = { Text("อีเมล") },
+                            label = { Text("อีเมล", color = DarkForest) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium
                         )
@@ -143,18 +139,10 @@ class LoginActivity : AppCompatActivity() {
                         OutlinedTextField(
                             value = password,
                             onValueChange = { password = it },
-                            label = { Text("รหัสผ่าน") },
+                            label = { Text("รหัสผ่าน", color = DarkForest) },
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            shape = MaterialTheme.shapes.medium,
-//                            trailingIcon = {
-//                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-////                                    Icon(
-////                                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-////                                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
-////                                    )
-//                                }
-//                            }
+                            shape = MaterialTheme.shapes.medium
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -169,9 +157,9 @@ class LoginActivity : AppCompatActivity() {
                                 .fillMaxWidth()
                                 .height(50.dp),
                             shape = MaterialTheme.shapes.medium,
-                            colors = ButtonDefaults.buttonColors( Color(0xFFFFA725)) // เปลี่ยนสีพื้นหลัง
+                            colors = ButtonDefaults.buttonColors(DarkForest) // ปุ่มเข้าสู่ระบบสี DarkForest
                         ) {
-                            Text("เข้าสู่ระบบ", color = Color.White) // ปรับสีตัวอักษรให้ตัดกับพื้นหลัง
+                            Text("เข้าสู่ระบบ", color = Color.White) // ตัวอักษรสีขาว
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -185,11 +173,10 @@ class LoginActivity : AppCompatActivity() {
                                 .fillMaxWidth()
                                 .height(50.dp),
                             shape = MaterialTheme.shapes.medium,
-                            colors = ButtonDefaults.buttonColors(Color(0xFFC1D8C3)) // เปลี่ยนสีพื้นหลัง
+                            colors = ButtonDefaults.buttonColors(Sage) // ปุ่มสมัครสมาชิกสี Sage
                         ) {
-                            Text("สมัครสมาชิก", color = Color.White) // ปรับสีตัวอักษรให้ตัดกับพื้นหลัง
+                            Text("สมัครสมาชิก", color = Color.White) // ตัวอักษรสีขาว
                         }
-
                     }
                 }
             }

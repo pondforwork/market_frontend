@@ -90,6 +90,11 @@ class DailyBookingActivity : ComponentActivity() {
     private lateinit var scope: CoroutineScope
     private lateinit var term: MutableState<String>
 
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,8 +155,7 @@ class DailyBookingActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxHeight() // ให้เต็มความสูง
                             .width(300.dp) // ปรับขนาดความกว้างของ Drawer
-                            .background(Color(0xFFFFA725))
-//                            .background(Color(0xFFFFF5E4)) // เปลี่ยนเป็นโค้ดสีที่คุณต้องการ
+                            .background(DarkForest)
                             .padding(16.dp)
                     ) {
                         Box(
@@ -160,9 +164,9 @@ class DailyBookingActivity : ComponentActivity() {
                             contentAlignment = Alignment.TopStart
                         ) {
                             Column {
-                                Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+                                Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = PaleLime, fontSize = 25.sp , fontWeight = FontWeight.Bold))
 
-                                Text("ร้าน ${shopName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+                                Text("ร้าน ${shopName}", style = MaterialTheme.typography.headlineSmall.copy(color = PaleLime, fontSize = 25.sp , fontWeight = FontWeight.Bold))
 
                             }
                         }
@@ -172,7 +176,7 @@ class DailyBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
                                 .padding(16.dp)
 
                         ) {
@@ -184,13 +188,13 @@ class DailyBookingActivity : ComponentActivity() {
                                 Icon(
                                     imageVector = Icons.Default.ShoppingCart, // ใช้ไอคอนตะกร้า
                                     contentDescription = "จองพื้นที่",
-                                    tint = Color.White,
+                                    tint = PaleLime,
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp)) // เว้นระยะระหว่างไอคอนกับข้อความ
                                 Text(
                                     "ขอจองพื้นที่",
-                                    color = Color.White,
+                                    color = PaleLime,
                                     fontSize = 25.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -200,7 +204,7 @@ class DailyBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable {
                                     startActivity(Intent(context, HistoryActivity::class.java))
                                 }
@@ -214,13 +218,13 @@ class DailyBookingActivity : ComponentActivity() {
                                 Icon(
                                     imageVector = Icons.Filled.History, // ใช้ไอคอน "ประวัติ"
                                     contentDescription = "ประวัติการจอง",
-                                    tint = Color.White, // ไอคอนเป็นสีขาว
+                                    tint = PaleLime, // ไอคอนเป็นสีขาว
                                     modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
                                 )
                                 Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
                                 Text(
                                     "ประวัติการจอง",
-                                    color = Color.White,
+                                    color = PaleLime,
                                     fontSize = 25.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -230,7 +234,7 @@ class DailyBookingActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
                                 .clickable {
                                     showLogoutDialog.value = true
                                 }
@@ -250,7 +254,7 @@ class DailyBookingActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     "ออกจากระบบ",
-                                    color = Color.White,
+                                    color = PaleLime,
                                     fontSize = 25.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -262,7 +266,7 @@ class DailyBookingActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(0xFFFFA725),
+                                containerColor = DarkForest,
                                 titleContentColor = Color.White
                             ),
                             title = {
@@ -311,7 +315,7 @@ class DailyBookingActivity : ComponentActivity() {
                                             .padding(vertical = 5.dp,horizontal = 16.dp)
                                             .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                                             .clip(RoundedCornerShape(16.dp))
-                                            .background(Color(0xFFFFC57F)),
+                                            .background(PastelMint),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Column(
@@ -411,7 +415,7 @@ class DailyBookingActivity : ComponentActivity() {
                 .padding(vertical = 5.dp, horizontal = 16.dp)
                 .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFFC57F)),
+                .background(PastelMint),
             contentAlignment = Alignment.Center
         ) {
             Column(
