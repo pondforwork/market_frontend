@@ -63,6 +63,10 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var bookingId: MutableState<Int>
     private lateinit var bookingType: MutableState<Int>
     private lateinit var bookingDetail: MutableState<BookingDetail>
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,15 +103,26 @@ class HistoryDetailActivity : ComponentActivity() {
                 topBar = {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFFFFA725),
-                            titleContentColor = Color.White
+                            containerColor = DarkForest, // สีพื้นหลังของ top app bar
+                            titleContentColor = Color.White // สีของข้อความ
                         ),
                         title = {
-                            Text("รายละเอียดการจองพื้นที่", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold))
+                            Text(
+                                "รายละเอียดการจองพื้นที่",
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    color = Color.White,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
                             }
                         }
                     )
@@ -120,45 +135,42 @@ class HistoryDetailActivity : ComponentActivity() {
                             .padding(16.dp)
                     ) {
                         if (isLoading.value) {
-                            // Show loading indicator
+                            // แสดง loading indicator
                             CircularProgressIndicator(
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                         } else {
-                            // Display receipt details
+                            // แสดงรายละเอียดการจอง
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                                    .background(Color.White)
-                                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                                    .background(Color(0xFFF0F4F8), RoundedCornerShape(16.dp)) // พื้นหลังสีเบจอ่อน
+                                    .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp)) // ขอบสีเทาอ่อน
                                     .padding(16.dp)
                             ) {
-//                                Text(
-//                                    text = "Id: ${bookingId.value}",
-//                                    style = MaterialTheme.typography.bodyLarge,
-//                                    fontWeight = FontWeight.Bold
-//                                )
+                                // ข้อมูลต่างๆ
                                 Text(
                                     text = "ชื่อแผง: ${bookingDetail.value.stallName}",
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black), // สีข้อความดำ
                                     fontWeight = FontWeight.Bold
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = "วันที่จอง: ${bookingDetail.value.createdAt}",
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black) // สีข้อความดำ
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = "ราคา: ${bookingDetail.value.price}",
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black) // สีข้อความดำ
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = "สถานะการชำระเงิน: ${bookingDetail.value.status.let { getThaiStatus(it) }}",
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black) // สีข้อความดำ
                                 )
+
                                 Spacer(modifier = Modifier.height(8.dp))
                                 if (bookingDetail.value.status == "pending") {
                                     Row(
@@ -168,7 +180,7 @@ class HistoryDetailActivity : ComponentActivity() {
                                         Button(
                                             onClick = { showCancelDialog.value = true },
                                             colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color.Red,
+                                                containerColor = Color.Red, // ปุ่มสีแดง
                                                 contentColor = Color.White
                                             ),
                                             shape = RoundedCornerShape(10.dp)
@@ -182,7 +194,7 @@ class HistoryDetailActivity : ComponentActivity() {
                                         Button(
                                             onClick = { showConfirmDialog.value = true },
                                             colors = ButtonDefaults.buttonColors(
-                                                containerColor = Color.Green,
+                                                containerColor = Color.Green, // ปุ่มสีเขียว
                                                 contentColor = Color.White
                                             ),
                                             shape = RoundedCornerShape(10.dp)
@@ -200,93 +212,118 @@ class HistoryDetailActivity : ComponentActivity() {
                 }
             )
 
+
             if (showConfirmDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showConfirmDialog.value = false },
-                    title = { 
+                    title = {
                         Text(
-                            text = "ยืนยันการชำระเงิน", 
-                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                        ) 
+                            text = "ยืนยันการชำระเงิน",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black // สีข้อความหัวข้อ
+                            )
+                        )
                     },
-                    text = { 
+                    text = {
                         Text(
-                            text = "คุณแน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน?", 
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-                        ) 
+                            text = "คุณแน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน?",
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black // สีข้อความเนื้อหา
+                            )
+                        )
                     },
                     confirmButton = {
-                        TextButton(
-                            onClick = { 
+                        Button(
+                            onClick = {
                                 showConfirmDialog.value = false
                                 scope.launch {
                                     submitPurchase()
                                 }
                             },
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Green, // สีพื้นหลังปุ่มยืนยัน
+                                contentColor = Color.White // สีข้อความปุ่ม
+                            )
                         ) {
                             Text(
-                                text = "ยืนยัน", 
+                                text = "ยืนยัน",
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     },
                     dismissButton = {
-                        TextButton(
+                        Button(
                             onClick = { showConfirmDialog.value = false },
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red, // สีพื้นหลังปุ่มยกเลิก
+                                contentColor = Color.White // สีข้อความปุ่ม
+                            )
                         ) {
                             Text(
-                                text = "ยกเลิก", 
+                                text = "ยกเลิก",
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                    }
+                    },
+                    containerColor = Color(0xFFF0F4F8) // สีพื้นหลังของ AlertDialog
                 )
             }
 
             if (showCancelDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showCancelDialog.value = false },
-                    title = { 
+                    title = {
                         Text(
-                            text = "ยกเลิกการจอง", 
+                            text = "ยกเลิกการจอง",
                             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-                        ) 
+                        )
                     },
-                    text = { 
+                    text = {
                         Text(
-                            text = "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?", 
+                            text = "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-                        ) 
+                        )
                     },
                     confirmButton = {
-                        TextButton(
-                            onClick = { 
+                        Button(
+                            onClick = {
                                 showCancelDialog.value = false
                                 scope.launch {
                                     cancelBooking()
                                 }
                             },
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Red, // สีพื้นหลังปุ่มยืนยัน
+                                contentColor = Color.White // สีข้อความปุ่ม
+                            )
                         ) {
                             Text(
-                                text = "ยืนยัน", 
+                                text = "ยืนยัน",
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     },
                     dismissButton = {
-                        TextButton(
+                        Button(
                             onClick = { showCancelDialog.value = false },
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Gray, // สีพื้นหลังปุ่มยกเลิก
+                                contentColor = Color.White // สีข้อความปุ่ม
+                            )
                         ) {
                             Text(
-                                text = "ยกเลิก", 
+                                text = "ยกเลิก",
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                    }
+                    },
+                    containerColor = Color(0xFFF0F4F8) // สีพื้นหลังของ AlertDialog
                 )
             }
         }

@@ -7,12 +7,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,49 +19,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import com.example.marketbooking.MainActivity
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.Stall
 import com.example.marketbooking.utils.UserPreferences
-import com.example.marketbooking.view.register.LoginActivity
-import com.example.marketbooking.view.register.RegisterActivity
-import androidx.compose.ui.draw.clip
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.model.BookingHistory
-import com.example.marketbooking.model.RequestBooking
-import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.CoroutineScope
-
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.math.log
-
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowBack
@@ -220,9 +191,6 @@ class HistoryActivity : ComponentActivity() {
             }
         }
     }
-
-
-
 
     // Add these helper functions
 fun getThaiStatus(status: String): String {
