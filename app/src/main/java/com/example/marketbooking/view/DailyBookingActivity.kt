@@ -361,7 +361,7 @@ class DailyBookingActivity : ComponentActivity() {
 
     private suspend fun getAvailableStalls() {
         try {
-            val response = RetrofitClient.apiService.getAvailableStalls()
+            val response = RetrofitClient.apiService.getAvailableStallsDaily()
             availableStalls.value = response.body() ?: emptyList()
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
@@ -429,7 +429,7 @@ class DailyBookingActivity : ComponentActivity() {
                             .width(100.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.Blue.copy(alpha = 0.2f))
-                            .padding(horizontal = 16.dp, vertical = 8.dp), // ✅ เพิ่ม padding ด้านใน
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -446,7 +446,7 @@ class DailyBookingActivity : ComponentActivity() {
                             .width(100.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.Green.copy(alpha = 0.2f))
-                            .padding(horizontal = 16.dp, vertical = 8.dp), // ✅ เพิ่ม padding ด้านใน
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -478,7 +478,7 @@ class DailyBookingActivity : ComponentActivity() {
                             }
                             val color = when {
                                 stall == null -> Color.Gray
-                                stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                                stall.bookingStatus == "ไม่ว่าง" -> Color.Red
                                 else -> Color(0xFF006400)
                             }
                             MarketStall(text = seatLabel, color = color, stall = stall)
@@ -549,7 +549,7 @@ class DailyBookingActivity : ComponentActivity() {
             text = {
                 Column {
                     Text("สถานะ: ${stall.bookingStatus}")
-                    Text("จำนวนวันที่ว่าง: ${stall.availableDays}")
+//                    Text("จำนวนวันที่ว่าง: ${stall.availableDays}")
                     Text("ราคาที่ต้องชำระ: ${stall.price}")
 
 //              Text("จำนวนวันที่ว่าง: ${stall.availableDays}/${stall.totalDays}")

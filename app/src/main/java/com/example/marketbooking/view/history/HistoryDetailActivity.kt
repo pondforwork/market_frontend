@@ -43,6 +43,7 @@ import androidx.compose.material3.TextButton
 import com.example.marketbooking.api.ApiService
 import com.example.marketbooking.api.RetrofitClient
 import com.example.marketbooking.model.BookingDetail
+import com.example.marketbooking.view.DailyBookingActivity
 import com.example.marketbooking.view.RegularBookingActivity
 import com.example.marketbooking.view.register.RegisterActivity
 import kotlinx.coroutines.launch
@@ -60,6 +61,7 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var showConfirmDialog: MutableState<Boolean>
     private lateinit var showCancelDialog: MutableState<Boolean>
     private lateinit var bookingId: MutableState<Int>
+    private lateinit var bookingType: MutableState<Int>
     private lateinit var bookingDetail: MutableState<BookingDetail>
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,9 +87,12 @@ class HistoryDetailActivity : ComponentActivity() {
             historys = mutableListOf()
             showConfirmDialog = remember { mutableStateOf(false) }
             showCancelDialog = remember { mutableStateOf(false) }
+            bookingType = remember { mutableStateOf(-1) }
+
             if(user!=null){
                 userName = user.name
                 userId = user.userId.toString()
+                bookingType.value = user.bookingCategoryId
             }
 
             Scaffold(
@@ -129,12 +134,11 @@ class HistoryDetailActivity : ComponentActivity() {
                                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                                     .padding(16.dp)
                             ) {
-                                Text(
-                                    text = "Id: ${bookingId.value}",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-
+//                                Text(
+//                                    text = "Id: ${bookingId.value}",
+//                                    style = MaterialTheme.typography.bodyLarge,
+//                                    fontWeight = FontWeight.Bold
+//                                )
                                 Text(
                                     text = "ชื่อแผง: ${bookingDetail.value.stallName}",
                                     style = MaterialTheme.typography.bodyLarge,
@@ -345,31 +349,36 @@ class HistoryDetailActivity : ComponentActivity() {
 
     private suspend fun submitPurchase() {
         try {
-            val response = RetrofitClient.apiService.cancelBooking(ApiService.SubmitPurchase(19.toString()))
+            val response = RetrofitClient.apiService.cancelBooking(ApiService.SubmitPurchase(bookingId.value.toString()))
             println(response.toString())
             // ถ้ายืนยันสำเร็จ กลับหน้าหลัก
             if(response.isSuccessful){
-                startActivity(Intent(this, RegularBookingActivity::class.java))
-            }else{
-                startActivity(Intent(this, RegularBookingActivity::class.java))
+                if(bookingType.value == 1){
+                    startActivity(Intent(this, RegularBookingActivity::class.java))
+                }else{
+                    startActivity(Intent(this, DailyBookingActivity::class.java))
+                }
             }
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
-
-
+    
     private suspend fun cancelBooking() {
         try {
 
-            val response = RetrofitClient.apiService.cancelBooking(ApiService.CancelRequest(19.toString()))
+            val response = RetrofitClient.apiService.cancelBooking(ApiService.CancelRequest(bookingId.value.toString()))
             println(response.toString())
             // ถ้ายกเลิกสำเร็จย้อนกลับไปหน้าหลัก
+            // ถ้าเป็นเจ้าประจำ
             if(response.isSuccessful){
-                startActivity(Intent(this, RegularBookingActivity::class.java))
-            }else{
-                startActivity(Intent(this, RegularBookingActivity::class.java))
+                if(bookingType.value == 1){
+                    startActivity(Intent(this, RegularBookingActivity::class.java))
+                }else{
+                    startActivity(Intent(this, DailyBookingActivity::class.java))
+                }
             }
+
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }

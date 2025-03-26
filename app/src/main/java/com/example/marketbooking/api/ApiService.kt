@@ -23,6 +23,10 @@ interface ApiService {
     @GET("available_stalls")
     suspend fun getAvailableStalls(): Response<List<Stall>>
 
+    @GET("available_daily")
+    suspend fun getAvailableStallsDaily(): Response<List<Stall>>
+
+
     @POST("register")
     suspend fun register(@Body user: User): Response<User>
 
