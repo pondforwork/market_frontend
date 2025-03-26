@@ -60,7 +60,7 @@ class HistoryDetailActivity : ComponentActivity() {
     private lateinit var showConfirmDialog: MutableState<Boolean>
     private lateinit var showCancelDialog: MutableState<Boolean>
     private lateinit var bookingId: MutableState<Int>
-    private lateinit var bookingDetail : MutableState<BookingDetail>
+    private lateinit var bookingDetail: MutableState<BookingDetail>
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +68,10 @@ class HistoryDetailActivity : ComponentActivity() {
             bookingId = remember { mutableIntStateOf(-1) }
 
             bookingId.value = intent.getStringExtra("booking_id")?.toIntOrNull() ?: -1
-
+            bookingDetail = remember { mutableStateOf(BookingDetail(stallName = "", status = "", createdAt = "", price = "")) }
             // Get Detail ที่นี่
             LaunchedEffect(Unit) {
-
+                fetchData()
             }
 
             scope = rememberCoroutineScope()
@@ -303,9 +303,42 @@ class HistoryDetailActivity : ComponentActivity() {
             "purchased" -> "รอการอนุมัติ"
             "accepted" -> "อนุมัติแล้ว"
             "rejected" -> "ปฏิเสธ"
+            "cancelled" -> "ยกเลิกแล้ว"
             else -> status
         }
     }
+
+    private suspend fun fetchData() {
+        try {
+            isLoading.value = true
+            getDetail()
+            isLoading.value = false
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
+    }
+
+    private suspend fun getDetail() {
+        try {
+            val response = RetrofitClient.apiService.getBookingDetail(bookingRequestId = bookingId.value.toString())
+
+            if (response.body() != null) {
+                val responseBody = response.body()!!
+
+                // ตรวจสอบว่า responseBody เป็น List หรือไม่
+                if (responseBody.isNotEmpty()) {
+                    bookingDetail.value = responseBody[0] as BookingDetail // ต้อง cast ให้เป็น object ที่ต้องการ
+                } else {
+                    Log.e("API_RESPONSE", "Response body is not a list or is empty")
+                }
+            } else {
+                Log.e("API_RESPONSE", "Response body is null")
+            }
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
+    }
+
 
     private suspend fun cancelBooking() {
         try {

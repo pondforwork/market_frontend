@@ -1,5 +1,6 @@
 package com.example.marketbooking.api
 
+import com.example.marketbooking.model.BookingDetail
 import com.example.marketbooking.model.BookingHistory
 import com.example.marketbooking.model.CanHoliday
 import com.example.marketbooking.model.RequestBooking
@@ -47,4 +48,7 @@ interface ApiService {
     data class CancelRequest(val stall_booking_requests_id: String)
     @POST("cancel_booking")
     suspend fun cancelBooking(@Body cancelRequest: CancelRequest): Response<Unit>
+
+    @GET("get_detail")
+    suspend fun getBookingDetail(@Query("booking_request_id") bookingRequestId: String): Response<List<BookingDetail>>
 }

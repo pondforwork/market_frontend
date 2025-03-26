@@ -3,7 +3,7 @@ package com.example.marketbooking.model
 import com.google.gson.annotations.SerializedName
 
 data class BookingDetail(
-    @SerializedName("stall_name")
+    @SerializedName("name")
     val stallName: String,
 
     @SerializedName("status")

@@ -212,6 +212,7 @@ fun getThaiStatus(status: String): String {
         "purchased" -> "รอการอนุมัติ"
         "accepted" -> "อนุมัติแล้ว"
         "rejected" -> "ปฏิเสธ"
+        "cancelled" -> "ยกเลิกแล้ว"
         else -> status
     }
 }
