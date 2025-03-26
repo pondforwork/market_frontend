@@ -49,6 +49,11 @@ interface ApiService {
     @POST("cancel_booking")
     suspend fun cancelBooking(@Body cancelRequest: CancelRequest): Response<Unit>
 
+    data class SubmitPurchase(val stall_booking_requests_id: String)
+    @POST("submit_purchase")
+    suspend fun cancelBooking(@Body submitReq: SubmitPurchase): Response<Unit>
+
+
     @GET("get_detail")
     suspend fun getBookingDetail(@Query("booking_request_id") bookingRequestId: String): Response<List<BookingDetail>>
 }

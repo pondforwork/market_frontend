@@ -215,7 +215,9 @@ class HistoryDetailActivity : ComponentActivity() {
                         TextButton(
                             onClick = { 
                                 showConfirmDialog.value = false
-                                // Handle confirm payment action
+                                scope.launch {
+                                    submitPurchase()
+                                }
                             },
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -302,7 +304,7 @@ class HistoryDetailActivity : ComponentActivity() {
     fun getThaiStatus(status: String): String {
         return when (status.lowercase()) {
             "pending" -> "รอการชำระเงิน"
-            "purchased" -> "รอการอนุมัติ"
+            "purchased" -> "ชำระเงินแล้ว รอการอนุมัติ"
             "accepted" -> "อนุมัติแล้ว"
             "rejected" -> "ปฏิเสธ"
             "cancelled" -> "ยกเลิกแล้ว"
@@ -335,6 +337,21 @@ class HistoryDetailActivity : ComponentActivity() {
                 }
             } else {
                 Log.e("API_RESPONSE", "Response body is null")
+            }
+        } catch (e: Exception) {
+            Log.e("API_RESPONSE", "Exception: ${e.message}")
+        }
+    }
+
+    private suspend fun submitPurchase() {
+        try {
+            val response = RetrofitClient.apiService.cancelBooking(ApiService.SubmitPurchase(19.toString()))
+            println(response.toString())
+            // ถ้ายืนยันสำเร็จ กลับหน้าหลัก
+            if(response.isSuccessful){
+                startActivity(Intent(this, RegularBookingActivity::class.java))
+            }else{
+                startActivity(Intent(this, RegularBookingActivity::class.java))
             }
         } catch (e: Exception) {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
