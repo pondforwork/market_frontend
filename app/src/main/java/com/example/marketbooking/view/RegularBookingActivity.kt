@@ -429,69 +429,109 @@ class RegularBookingActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(vertical = 5.dp, horizontal = 16.dp)
                 .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
-                .clip(RoundedCornerShape(16.dp)) // ตัดพื้นหลังให้ตรงกับ Shape
+                .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xFFFFC57F)),
-            contentAlignment = Alignment.Center // จัดให้ Row อยู่ตรงกลาง
+            contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f) // ควบคุมความกว้างของ Row ให้อยู่ตรงกลาง
-                    .align(Alignment.Center)
-                    .padding(vertical = 10.dp), // จัดให้ Row อยู่ตรงกลาง
-                horizontalArrangement = Arrangement.Center // จัดให้อยู่กึ่งกลางแทน SpaceEvenly
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // แถว A (ซ้าย)
-                Column(
+                Row(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .width(100.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
+                        .fillMaxWidth(0.7f)
+                        .padding(bottom = 10.dp, top = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    for (row in 0 until 12) {
-                        val seatLabel = "A${row + 1}"
-                        val stall = availableStalls.value.find {
-                            it.lineName == "A" && it.lineSequence == row + 1
-                        }
-                        val color = when {
-                            stall == null -> Color.Gray
-                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                            else -> Color(0xFF006400)
-                        }
-                        MarketStall(text = seatLabel, color = color, stall = stall)
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.Blue.copy(alpha = 0.2f))
+                            .padding(horizontal = 16.dp, vertical = 8.dp), // ✅ เพิ่ม padding ด้านใน
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "ของใช้",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(32.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.Green.copy(alpha = 0.2f))
+                            .padding(horizontal = 16.dp, vertical = 8.dp), // ✅ เพิ่ม padding ด้านใน
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "ของกิน",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
                     }
                 }
 
-                // ทางเดินตรงกลาง
-                Spacer(modifier = Modifier.width(32.dp)) // ขยายทางเดินให้สมดุล
-
-                // แถว B (ขวา)
-                Column(
+                Row(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .width(100.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // จัดให้ Column อยู่ตรงกลาง
+                        .fillMaxWidth(0.7f)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 10.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    for (row in 0 until 12) {
-                        val seatLabel = "B${row + 1}"
-                        val stall = availableStalls.value.find {
-                            it.lineName == "B" && it.lineSequence == row + 1
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(100.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        for (row in 0 until 12) {
+                            val seatLabel = "A${row + 1}"
+                            val stall = availableStalls.value.find {
+                                it.lineName == "A" && it.lineSequence == row + 1
+                            }
+                            val color = when {
+                                stall == null -> Color.Gray
+                                stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                                else -> Color(0xFF006400)
+                            }
+                            MarketStall(text = seatLabel, color = color, stall = stall)
                         }
-                        val color = when {
-                            stall == null -> Color.Gray
-                            stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
-                            else -> Color(0xFF006400)
+                    }
+
+                    Spacer(modifier = Modifier.width(32.dp))
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(100.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        for (row in 0 until 12) {
+                            val seatLabel = "B${row + 1}"
+                            val stall = availableStalls.value.find {
+                                it.lineName == "B" && it.lineSequence == row + 1
+                            }
+                            val color = when {
+                                stall == null -> Color.Gray
+                                stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                                else -> Color(0xFF006400)
+                            }
+                            MarketStall(text = seatLabel, color = color, stall = stall)
                         }
-                        MarketStall(text = seatLabel, color = color, stall = stall)
                     }
                 }
             }
         }
     }
 
-
-    @Composable
+        @Composable
     fun MarketStall(text: String, color: Color, stall: Stall?) {
         Box(
             modifier = Modifier
