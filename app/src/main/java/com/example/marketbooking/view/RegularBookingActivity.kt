@@ -81,7 +81,10 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var term: MutableState<String>
-
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -137,31 +140,43 @@ class RegularBookingActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxHeight() // ให้เต็มความสูง
                             .width(300.dp) // ปรับขนาดความกว้างของ Drawer
-                            .background(Color(0xFFFFA725))
-//                            .background(Color(0xFFFFF5E4)) // เปลี่ยนเป็นโค้ดสีที่คุณต้องการ
+                            .background(DarkForest) // ใช้สี DarkForest
                             .padding(16.dp)
                     ) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                                    contentAlignment = Alignment.TopStart
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.TopStart
                         ) {
                             Column {
-                                Text("สวัสดี ${userName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
+                                Text(
+                                    "สวัสดี ${userName}",
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        color = PaleLime, // ใช้สี PaleLime สำหรับข้อความ
+                                        fontSize = 25.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
 
-                                Text("ร้าน ${shopName}", style = MaterialTheme.typography.headlineSmall.copy(color = Color.White, fontSize = 25.sp , fontWeight = FontWeight.Bold))
-
+                                Text(
+                                    "ร้าน ${shopName}",
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        color = PaleLime, // ใช้สี PaleLime สำหรับข้อความ
+                                        fontSize = 25.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // ตัวอย่างปุ่ม "ขอจองพื้นที่"
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว                                .clickable { /* ไปหน้าแรก */ }
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสี PaleLime
+                                .clickable { /* ไปหน้าแรก */ }
                                 .padding(16.dp)
-
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -171,100 +186,106 @@ class RegularBookingActivity : ComponentActivity() {
                                 Icon(
                                     imageVector = Icons.Default.ShoppingCart, // ใช้ไอคอนตะกร้า
                                     contentDescription = "จองพื้นที่",
-                                    tint = Color.White,
+                                    tint = PaleLime, // ใช้สี PaleLime สำหรับไอคอน
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp)) // เว้นระยะระหว่างไอคอนกับข้อความ
                                 Text(
                                     "ขอจองพื้นที่",
-                                    color = Color.White,
-                                    fontSize = 25.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
-                                .clickable {
-                                    startActivity(Intent(context, HistoryActivity::class.java))
-                                }
-                                .padding(16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
-                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.History, // ใช้ไอคอน "ประวัติ"
-                                    contentDescription = "ประวัติการจอง",
-                                    tint = Color.White, // ไอคอนเป็นสีขาว
-                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
-                                )
-                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
-                                Text(
-                                    "ประวัติการจอง",
-                                    color = Color.White,
-                                    fontSize = 25.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
-                                .clickable {
-                                    startActivity(Intent(context, HolidayActivity::class.java))
-                                }
-                                .padding(16.dp)
-                        ) {
-
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
-                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.CalendarMonth, // ใช้ไอคอน "ประวัติ"
-                                    contentDescription = "แจ้งวันหยุด",
-                                    tint = Color.White, // ไอคอนเป็นสีขาว
-                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
-                                )
-                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
-                                Text(
-                                    "แจ้งวันหยุด",
-                                    color = Color.White,
+                                    color = PaleLime, // ใช้สี PaleLime สำหรับข้อความ
                                     fontSize = 25.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
                         }
+
                         Spacer(modifier = Modifier.height(8.dp))
+
+                        // ตัวอย่างปุ่ม "ประวัติการจอง"
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
-                                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)) // กรอบสีขาว
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสี PaleLime
+                                .clickable { startActivity(Intent(context, HistoryActivity::class.java)) }
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.History, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "ประวัติการจอง",
+                                    tint = PaleLime, // ใช้สี PaleLime สำหรับไอคอน
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "ประวัติการจอง",
+                                    color = PaleLime, // ใช้สี PaleLime สำหรับข้อความ
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // ตัวอย่างปุ่ม "แจ้งวันหยุด"
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, PaleLime, shape = RoundedCornerShape(8.dp)) // กรอบสี PaleLime
+                                .clickable { startActivity(Intent(context, HolidayActivity::class.java)) }
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.CalendarMonth, // ใช้ไอคอน "ประวัติ"
+                                    contentDescription = "แจ้งวันหยุด",
+                                    tint = PaleLime, // ใช้สี PaleLime สำหรับไอคอน
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp)) // เพิ่มระยะห่างระหว่างไอคอนกับข้อความ
+                                Text(
+                                    "แจ้งวันหยุด",
+                                    color = PaleLime, // ใช้สี PaleLime สำหรับข้อความ
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // ตัวอย่างปุ่ม "ออกจากระบบ"
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Transparent, shape = RoundedCornerShape(8.dp)) // พื้นหลังโปร่งใส
+                                .border(2.dp, Color.Red, shape = RoundedCornerShape(8.dp)) // กรอบสีแดง
                                 .clickable {
                                     showLogoutDialog.value = true
                                 }
                                 .padding(16.dp)
                         ) {
                             Row(
-                                verticalAlignment = Alignment.CenterVertically, // จัดไอคอนและข้อความให้อยู่ตรงกลางแนวตั้ง
-                                horizontalArrangement = Arrangement.Center, // จัดให้อยู่ตรงกลางแนวนอน
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Logout, // ใช้ไอคอน "ประวัติ"
                                     contentDescription = "ออกจากระบบ",
-                                    tint = Color.Red, // ไอคอนเป็นสีขาว
-                                    modifier = Modifier.size(24.dp) // กำหนดขนาดไอคอน
+                                    tint = Color.Red, // ไอคอนเป็นสีแดง
+                                    modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
@@ -273,7 +294,8 @@ class RegularBookingActivity : ComponentActivity() {
                                     fontSize = 25.sp,
                                     fontWeight = FontWeight.Bold
                                 )
-                            }                        }
+                            }
+                        }
                     }
                 }
             ) {
@@ -281,7 +303,7 @@ class RegularBookingActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(0xFFFFA725),
+                                containerColor = DarkForest,
                                 titleContentColor = Color.White
                             ),
                             title = {
@@ -330,7 +352,7 @@ class RegularBookingActivity : ComponentActivity() {
                                             .padding(vertical = 5.dp,horizontal = 16.dp)
                                             .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                                             .clip(RoundedCornerShape(16.dp))
-                                            .background(Color(0xFFFFC57F)),
+                                            .background(PastelMint),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Column(
@@ -430,7 +452,7 @@ class RegularBookingActivity : ComponentActivity() {
                 .padding(vertical = 5.dp, horizontal = 16.dp)
                 .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFFC57F)),
+                .background(PastelMint),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -602,15 +624,12 @@ class RegularBookingActivity : ComponentActivity() {
                         scope.launch {
                             bookingStall(requestObject)
                         }
-
-
-
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.4f)
                         .height(45.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFFFFA725)) // สีส้ม
+                    colors = ButtonDefaults.buttonColors(Sage)
                 ) {
                     Text("จอง", color = Color.White, fontWeight = FontWeight.Bold)
                 }

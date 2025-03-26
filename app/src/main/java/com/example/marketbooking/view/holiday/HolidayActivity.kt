@@ -59,8 +59,10 @@ class HolidayActivity : ComponentActivity() {
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var historys: List<BookingHistory>;
-//    private lateinit var canHoliday: MutableState<Boolean>
-
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
     private lateinit var holidayStatus: MutableState<String>
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -100,7 +102,7 @@ class HolidayActivity : ComponentActivity() {
                 topBar = {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFFFFA725),
+                            containerColor = DarkForest,
                             titleContentColor = Color.White
                         ),
                         title = {

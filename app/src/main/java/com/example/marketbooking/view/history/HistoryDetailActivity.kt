@@ -363,7 +363,7 @@ class HistoryDetailActivity : ComponentActivity() {
             Log.e("API_RESPONSE", "Exception: ${e.message}")
         }
     }
-    
+
     private suspend fun cancelBooking() {
         try {
 

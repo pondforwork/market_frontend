@@ -82,12 +82,15 @@ class HistoryActivity : ComponentActivity() {
     private lateinit var selectedStall: MutableState<Stall?>
     private lateinit var showLogoutDialog: MutableState<Boolean>
     private lateinit var showSuccessDialog: MutableState<Boolean>
-
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var historys: List<BookingHistory>;
+    val DarkForest = Color(0xFF102F15)
+    val Sage = Color(0xFF728C5A)
+    val PaleLime = Color(0xFFEAF1B1)
+    val PastelMint = Color(0xFFEBFADC)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +122,7 @@ class HistoryActivity : ComponentActivity() {
                 topBar = {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFFFFA725),
+                            containerColor = DarkForest,
                             titleContentColor = Color.White
                         ),
                         title = {
@@ -182,40 +185,42 @@ class HistoryActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
                 .clickable {
-//                    startActivity(Intent(this, HistoryDetailActivity::class.java))
                     val intent = Intent(this, HistoryDetailActivity::class.java).apply {
                         putExtra("booking_id", history.id.toString())
                     }
                     startActivity(intent)
-
-                }, // Make the card clickable
+                },
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            shape = RoundedCornerShape(8.dp)
-        ) {
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = PastelMint // ใช้สี PastelMint สำหรับพื้นหลังของ Card
+            )        ) {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "แผง: ${history.stallName}",
+                    text = "ชื่อแผง : ${history.stallName}",
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = DarkForest // ใช้สี DarkForest สำหรับข้อความชื่อแผง
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "สถานะ: ${getThaiStatus(history.status)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = getStatusColor(history.status)
+                    color = getStatusColor(history.status) // ใช้สีที่เหมาะสมจากฟังก์ชัน getStatusColor()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "วันที่จอง: ${formatDate(history.createdAt)}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Sage // ใช้สี Sage สำหรับข้อความวันที่จอง
                 )
             }
         }
     }
+
 
 
 
