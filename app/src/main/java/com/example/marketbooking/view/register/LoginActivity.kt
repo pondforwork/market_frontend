@@ -27,6 +27,7 @@ import com.example.marketbooking.utils.UserPreferences
 import com.example.marketbooking.view.DailyBookingActivity
 import com.example.marketbooking.view.RegularBookingActivity
 import kotlinx.coroutines.launch
+import android.util.Patterns
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var userPreferences: UserPreferences
@@ -94,6 +95,24 @@ class LoginActivity : AppCompatActivity() {
         var passwordVisible by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
+        fun validateInputs(): Boolean {
+            return when {
+                email.isBlank() -> {
+                    Toast.makeText(this@LoginActivity, "กรุณากรอกอีเมล", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    Toast.makeText(this@LoginActivity, "รูปแบบอีเมลไม่ถูกต้อง", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                password.isBlank() -> {
+                    Toast.makeText(this@LoginActivity, "กรุณากรอกรหัสผ่าน", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                else -> true
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -149,8 +168,10 @@ class LoginActivity : AppCompatActivity() {
 
                         Button(
                             onClick = {
-                                scope.launch {
-                                    login(email, password)
+                                if (validateInputs()) {
+                                    scope.launch {
+                                        login(email, password)
+                                    }
                                 }
                             },
                             modifier = Modifier

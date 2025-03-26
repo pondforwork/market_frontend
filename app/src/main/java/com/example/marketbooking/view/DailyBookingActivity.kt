@@ -579,7 +579,7 @@ class DailyBookingActivity : ComponentActivity() {
                         var requestObject = RequestBooking(
                             stallId = stall.stallId,
                             bookingUserId = userId.toIntOrNull() ?: 0, // แปลง userId เป็น Int, ถ้าไม่ได้ให้เป็น 0
-                            bookingCategoryId = 1,
+                            bookingCategoryId = 2,
                             price = stall.price.toIntOrNull() ?: 0 // แปลง price เป็น Int, ถ้าไม่ได้ให้เป็น 0
                         )
                         // ซ่อน Dialog จอง
@@ -675,32 +675,50 @@ class DailyBookingActivity : ComponentActivity() {
         )
     }
 
-
-
-
     @Composable
     fun LogoutConfirmationDialog(
-        onConfirm: () -> Unit,
-        onDismiss: () -> Unit
+        onDismiss: () -> Unit,
+        onConfirm: () -> Unit
     ) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("ยืนยันการออกจากระบบ") },
-            text = { Text("คุณต้องการออกจากระบบใช่หรือไม่?") },
+            containerColor = PastelMint, // พื้นหลัง Dialog สี PastelMint
+            title = {
+                Text(
+                    "ยืนยันการออกจากระบบ",
+                    color = DarkForest,
+                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                )
+            },
+            text = {
+                Text(
+                    "คุณต้องการออกจากระบบใช่หรือไม่?",
+                    color = DarkForest,
+                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                )
+            },
             confirmButton = {
                 TextButton(
-                    onClick = onConfirm
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = DarkForest, // ปุ่มตกลงเป็นสี DarkForest
+                        contentColor = Color.White
+                    )
                 ) {
-                    Text("ตกลง")
+                    Text("ตกลง", fontWeight = FontWeight.Bold) // ทำให้ตัวหนังสือปุ่มตกลงหนา
                 }
             },
             dismissButton = {
                 TextButton(
-                    onClick = onDismiss
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = Sage // ปุ่มยกเลิกใช้ตัวอักษรสี Sage
+                    )
                 ) {
-                    Text("ยกเลิก")
+                    Text("ยกเลิก", fontWeight = FontWeight.Bold) // ทำให้ตัวหนังสือปุ่มยกเลิกหนา
                 }
             }
         )
     }
+
 }

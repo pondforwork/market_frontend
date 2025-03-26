@@ -709,30 +709,47 @@ class RegularBookingActivity : ComponentActivity() {
         )
     }
 
-
-
-
     @Composable
     fun LogoutConfirmationDialog(
-        onConfirm: () -> Unit,
-        onDismiss: () -> Unit
+        onDismiss: () -> Unit,
+        onConfirm: () -> Unit
     ) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("ยืนยันการออกจากระบบ") },
-            text = { Text("คุณต้องการออกจากระบบใช่หรือไม่?") },
+            containerColor = PastelMint, // พื้นหลัง Dialog สี PastelMint
+            title = {
+                Text(
+                    "ยืนยันการออกจากระบบ",
+                    color = DarkForest,
+                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                )
+            },
+            text = {
+                Text(
+                    "คุณต้องการออกจากระบบใช่หรือไม่?",
+                    color = DarkForest,
+                    fontWeight = FontWeight.Bold // ทำให้ตัวหนา
+                )
+            },
             confirmButton = {
                 TextButton(
-                    onClick = onConfirm
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = DarkForest, // ปุ่มตกลงเป็นสี DarkForest
+                        contentColor = Color.White
+                    )
                 ) {
-                    Text("ตกลง")
+                    Text("ตกลง", fontWeight = FontWeight.Bold) // ทำให้ตัวหนังสือปุ่มตกลงหนา
                 }
             },
             dismissButton = {
                 TextButton(
-                    onClick = onDismiss
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = Sage // ปุ่มยกเลิกใช้ตัวอักษรสี Sage
+                    )
                 ) {
-                    Text("ยกเลิก")
+                    Text("ยกเลิก", fontWeight = FontWeight.Bold) // ทำให้ตัวหนังสือปุ่มยกเลิกหนา
                 }
             }
         )

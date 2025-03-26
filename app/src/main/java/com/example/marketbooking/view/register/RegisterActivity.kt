@@ -1,5 +1,6 @@
 package com.example.marketbooking.view.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -207,8 +208,10 @@ class RegisterActivity : AppCompatActivity() {
 
                             Button(
                                 onClick = {
-                                    scope.launch {
-                                        register()
+                                    if (validateInputs()) {
+                                        scope.launch {
+                                            register()
+                                        }
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
@@ -246,15 +249,65 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateInputs(): Boolean {
+        return when {
+            email.value.isBlank() -> {
+                Log.e("VALIDATION", "Email is required")
+                false
+            }
+            password.value.isBlank() -> {
+                Log.e("VALIDATION", "Password is required")
+                false
+            }
+            shopName.value.isBlank() -> {
+                Log.e("VALIDATION", "Shop name is required")
+                false
+            }
+            firstName.value.isBlank() -> {
+                Log.e("VALIDATION", "First name is required")
+                false
+            }
+            tel.value.isBlank() -> {
+                Log.e("VALIDATION", "Telephone number is required")
+                false
+            }
+            else -> true
+        }
+    }
+
     @Composable
     fun SuccessDialog(onDismiss: () -> Unit) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("สมัครสมาชิกสำเร็จ") },
-            text = { Text("สำเร็จ") },
+            containerColor = PastelMint,
+            titleContentColor = DarkForest,
+            textContentColor = Sage,
+            title = { 
+                Text(
+                    "สมัครสมาชิกสำเร็จ",
+                    style = MaterialTheme.typography.headlineSmall
+                ) 
+            },
+            text = { 
+                Text(
+                    "ระบบจะพาท่านเข้าสู่หน้าเข้าสู่ระบบ",
+                    style = MaterialTheme.typography.bodyLarge
+                ) 
+            },
             confirmButton = {
-                TextButton(onClick = onDismiss) {
-                    Text("ตกลง")
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = DarkForest
+                    )
+                ) {
+                    Text(
+                        "ตกลง",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         )
