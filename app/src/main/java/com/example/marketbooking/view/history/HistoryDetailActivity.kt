@@ -156,36 +156,38 @@ class HistoryDetailActivity : ComponentActivity() {
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Button(
-                                        onClick = { showCancelDialog.value = true },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = Color.Red,
-                                            contentColor = Color.White
-                                        ),
-                                        shape = RoundedCornerShape(10.dp)
+                                if (bookingDetail.value.status == "pending") {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
                                     ) {
-                                        Text(
-                                            text = "ยกเลิก",
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Button(
-                                        onClick = { showConfirmDialog.value = true },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = Color.Green,
-                                            contentColor = Color.White
-                                        ),
-                                        shape = RoundedCornerShape(10.dp)
-                                    ) {
-                                        Text(
-                                            text = "ยืนยันการชำระเงิน",
-                                            fontWeight = FontWeight.Bold
-                                        )
+                                        Button(
+                                            onClick = { showCancelDialog.value = true },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Red,
+                                                contentColor = Color.White
+                                            ),
+                                            shape = RoundedCornerShape(10.dp)
+                                        ) {
+                                            Text(
+                                                text = "ยกเลิก",
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Button(
+                                            onClick = { showConfirmDialog.value = true },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Green,
+                                                contentColor = Color.White
+                                            ),
+                                            shape = RoundedCornerShape(10.dp)
+                                        ) {
+                                            Text(
+                                                text = "ยืนยันการชำระเงิน",
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
                                     }
                                 }
                             }
