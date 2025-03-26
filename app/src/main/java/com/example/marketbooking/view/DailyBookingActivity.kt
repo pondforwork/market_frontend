@@ -505,7 +505,7 @@ class DailyBookingActivity : ComponentActivity() {
                             }
                             val color = when {
                                 stall == null -> Color.Gray
-                                stall.bookingStatus == "มีการจองบางวัน" -> Color.Red
+                                stall.bookingStatus == "ไม่ว่าง" -> Color.Red
                                 else -> Color(0xFF006400)
                             }
                             MarketStall(text = seatLabel, color = color, stall = stall)
