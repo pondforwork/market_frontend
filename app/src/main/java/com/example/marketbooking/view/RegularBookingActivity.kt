@@ -77,7 +77,7 @@ class RegularBookingActivity : ComponentActivity() {
     private lateinit var showFailDialog: MutableState<Boolean>
     private lateinit var userPreferences: UserPreferences
     private lateinit var userName: String
-    private lateinit var shopName: String
+    private var shopName = ""
     private lateinit var userId: String
     private lateinit var scope: CoroutineScope
     private lateinit var term: MutableState<String>

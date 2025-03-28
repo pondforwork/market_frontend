@@ -1,4 +1,5 @@
 package com.example.marketbooking.view.holiday
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -42,6 +43,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedButton
 import com.example.marketbooking.api.ApiService
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.core.content.ContextCompat.startActivity
+import com.example.marketbooking.view.DailyBookingActivity
+import com.example.marketbooking.view.RegularBookingActivity
+import com.example.marketbooking.view.history.HistoryActivity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -325,7 +330,8 @@ class HolidayActivity : ComponentActivity() {
 @Composable
 fun HolidaySuccessDialog(onDismiss: () -> Unit) {
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { onDismiss()
+        },
         title = {
             Text(
                 text = "แจ้งวันหยุดสำเร็จ",
@@ -336,7 +342,6 @@ fun HolidaySuccessDialog(onDismiss: () -> Unit) {
         text = {
             Column {
                 Text("คุณได้ทำการแจ้งวันหยุดเรียบร้อยแล้ว", fontSize = 16.sp)
-                Text("ระบบจะพาท่านกลับสู่หน้าหลัก", fontSize = 16.sp)
             }
         },
         confirmButton = {
